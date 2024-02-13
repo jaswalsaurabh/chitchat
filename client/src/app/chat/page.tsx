@@ -13,39 +13,37 @@ export default function Page() {
     );
   return (
     <div className="flex flex-col">
-      <div className="flex h-[8vh] sticky top-0 bg-blue-300 px-2">
+      <div className="flex h-[8vh] sticky top-0">
         <div className="flex justify-center items-center">
-          <Image
-            src={
-              Logo
-            }
-            alt="logo"
-            height={
-              50
-            }
-            width={
-              50
-            }
-          />
-          <h1 className="font-semibold text-2xl" >
-            Chit
-            Chat
+          <h1 className="ml-4 text-2xl font-sans">
+            Messages
           </h1>
         </div>
       </div>
-      <div className="flex h-[93vh] w-full">
-        <div className="flex w-[35%] flex-col bg-violet-200 border border-solid overflow-y-scroll">
+      <div className="flex h-[92vh] w-full">
+        <div className="flex flex-col border border-solid overflow-y-scroll w-full lg:w-[35%]">
           {filledArray.map(
             (
               item,
+              index,
             ) => (
               <>
+                {index ==
+                  0 && (
+                  <div className="p-3">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      className="p-2 pl-4 w-[100%] outline-none text-sm bg-slate-100 border border-solid rounded-full"
+                    />
+                  </div>
+                )}
                 <ChatInfo />
               </>
             ),
           )}
         </div>
-        <div className="flex w-full h-full bg-orange-200">
+        <div className="lg:flex w-full h-full bg-orange-200 hidden">
           <Image
             src={
               ChatCover
