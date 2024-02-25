@@ -7,7 +7,7 @@ export default function Page() {
   const filledArray = Array.from({ length }, (_, index) => index + 1);
   return (
     <div className="flex flex-col absolute ">
-      <div className="flex h-[8vh] min-h-[63px]  sticky top-0">
+      <div className="flex h-[8vh] min-h-[63px] sticky top-0">
         <div className="flex justify-center items-center">
           <h1 className="ml-4 text-2xl font-sans">Messages</h1>
         </div>
