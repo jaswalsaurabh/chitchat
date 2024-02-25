@@ -8,7 +8,7 @@ function ChatHistory({ parentWidth }: { parentWidth: number | null }) {
   let widthStyle = width?.toFixed(0) + "px";
   console.log("width histo", widthStyle);
   return (
-    <div className="flex items-center justify-center flex-col h-full w-full overflow-y-hidden">
+    <div className="flex items-center flex-col h-full w-full overflow-y-hidden">
       <Message />
       <div className="w-full absolute">
         <MessageInput parentWidth={parentWidth} />

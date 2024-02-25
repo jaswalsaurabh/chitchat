@@ -4,7 +4,9 @@ function Message() {
   const length = 35;
   const filledArray = Array.from({ length }, (_, index) => index + 1);
   return (
-    <div className={`flex flex-col mt-4 w-full px-4 overflow-y-scroll`}>
+    <div
+      className={`flex flex-col mt-4 h-[82%] w-full px-10 overflow-y-scroll`}
+    >
       {filledArray.map((item) => (
         <div
           key={item}
