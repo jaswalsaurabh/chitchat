@@ -51,7 +51,7 @@ function ChatHeader() {
             />
           </div>
           <div
-            className="flex flex-1 flex-col cursor-pointer"
+            className="flex flex-1 flex-col justify-center h-full cursor-pointer"
             onClick={handleUserInfo}
           >
             Jaswal
