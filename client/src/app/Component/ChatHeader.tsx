@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import UserImage from "../../assets/user.svg";
 import SearchIcon from "../../assets/search.png";
@@ -19,15 +19,28 @@ function ChatHeader() {
   function closeProfile() {
     setHistoryProps({ ...historyProps, userInfo: false });
   }
+  //   const parentWidth = useRef<number | null>(null);
+  const [parentWidth, setParentWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const parent = document.getElementById("flexDiv");
+    // Get the width of the parent div
+    if (!parent || !parent.offsetWidth) {
+      return;
+    }
+    setParentWidth(parent.offsetWidth);
+    // Log the width to the console (you can use this value as needed)
+    console.log("Parent div width:", parent.offsetWidth);
+  }, []);
   return (
     <div className="flex flex-row w-full">
       {" "}
       <div
+        id="flexDiv"
         className={`flex flex-col items-center ${
           historyProps.userInfo ? "flex w-[60%]" : "w-full"
-        } h-[92vh] bg-amber-200 relative `}
+        } h-[92vh] bg-amber-200`}
       >
-        <header className="bg-sky-200 flex flex-row items-center w-full h-[8vh] min-h-[62px]">
+        <header className="bg-sky-200 z-10 flex flex-row items-center w-full h-[8vh] min-h-[62px]">
           <div className="flex-none px-6 cursor-pointer">
             <Image
               priority
@@ -66,7 +79,7 @@ function ChatHeader() {
             </div>
           </div>
         </header>
-        <ChatHistory />
+        <ChatHistory parentWidth={parentWidth} />
       </div>
       <div
         className={`${

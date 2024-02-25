@@ -1,6 +1,5 @@
 import Image from "next/image";
 import ChatCover from "../../assets/cover.png";
-import dynamic from "next/dynamic";
 import ChatInfo from "../Component/ChatInfo";
 
 export default function Page() {
