@@ -3,9 +3,11 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-between p-24">
       <head>
-      <link rel="icon" href="/logo.ico" />
+        <a>
+          <link rel="icon" href="/logo.ico" />
+        </a>
       </head>
-      <Link href={'/login'}>Login</Link>
+      <Link href={"/login"}>Login</Link>
     </main>
   );
 }
