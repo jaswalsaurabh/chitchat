@@ -12,9 +12,9 @@ function Message() {
           key={item}
           className={`${
             item % 2 == 0 ? "self-end" : "self-start"
-          } bg-green-100 max-w-[65%]`}
+          } bg-green-100 max-w-[65%] rounded-tl-none rounded-md`}
         >
-          <div className="inline-flex w-auto bg-white">
+          <div className="inline-flex w-auto bg-white px-2 py-1 rounded-tl-none rounded-md">
             <p className="">Hello bro kya kr rha hai {item}</p>
             <span className="text-sm pl-2 pt-4">12:23</span>
           </div>

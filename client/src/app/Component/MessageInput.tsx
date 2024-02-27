@@ -26,7 +26,7 @@ function MessageInput({ parentWidth }: { parentWidth: number | null }) {
             />
           </div>
           <input
-            className="p-3 ml-4 w-[91%] outline-none border-none"
+            className="py-3 w-[91%] outline-none border-none"
             autoFocus
             type="text"
             placeholder="Type a message.."
