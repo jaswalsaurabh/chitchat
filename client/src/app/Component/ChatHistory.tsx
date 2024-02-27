@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import MessageInput from "./MessageInput";
+import ChatInput from "./ChatInput";
 import Message from "./Message";
 
 function ChatHistory({ parentWidth }: { parentWidth: number | null }) {
@@ -11,7 +11,7 @@ function ChatHistory({ parentWidth }: { parentWidth: number | null }) {
     <div className="flex items-center flex-col h-full w-full overflow-y-hidden">
       <Message />
       <div className="w-full absolute">
-        <MessageInput parentWidth={parentWidth} />
+        <ChatInput parentWidth={parentWidth} />
       </div>
     </div>
   );

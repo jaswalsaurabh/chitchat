@@ -43,7 +43,7 @@ export default function RootLayout({
                 width={50}
                 alt="user-avatar"
               />
-              <Modal/>
+              {/* <Modal/> */}
             </div>
           </div>
         </div>
