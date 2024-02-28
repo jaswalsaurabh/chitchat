@@ -36,7 +36,7 @@ function ChatInput({ parentWidth }: { parentWidth: number | null }) {
               alt="user-avatar"
             />
           </div>
-          <div className="flex items-center w-full">
+          <div className="flex items-center w-full py-2">
             {/* <textarea
             className="p-0 m-0 w-full outline-none border-none"
             value={message}

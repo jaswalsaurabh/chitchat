@@ -1,0 +1,35 @@
+service: chit-chat
+frameworkVersion: "3"
+package:
+  individually: true
+  exclude:
+    - node_modules/aws-sdk/**
+useDotenv: true
+provider:
+  name: aws
+  stage: dev
+  region: us-east-1
+  runtime: nodejs18.x
+  websocketsApiRouteSelectionExpression: $request.body.route
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - cognito-idp:*
+      Resource:
+        - arn:aws:cognito-idp:us-east-1:734584477105:userpool/us-east-1_Xr2AHQiUF
+plugins:
+  - serverless-bundle
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  connect:
+    handler: src/services/websockets/connect.handler
+    events:
+      - websocket:
+          route: $connect
+  disconnect:
+    handler: src/services/websockets/disconnect.handler
+    events:
+      - websocket:
+          route: $disconnect
