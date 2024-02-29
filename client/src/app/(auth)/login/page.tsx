@@ -1,12 +1,37 @@
 "use client";
+import { signIn } from "@aws-amplify/auth";
+import { Amplify } from "aws-amplify";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
+import awsconfig from "../../../aws-exports";
 
+// @ts-ignore
+Amplify.configure({ ...awsconfig });
 export default function Page() {
   const router = useRouter();
+  const [userData, setUserData] = useState({
+    email: "",
+    name: "",
+    password: "",
+  });
   function handleClick() {
     router.push("/register");
   }
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserData({ ...userData, [name]: value });
+  };
+  const handleLogin = async () => {
+    try {
+      const singnInRes = await signIn({
+        username: userData.email,
+        password: userData.password,
+      });
+      console.log("singnInRes", singnInRes);
+    } catch (error) {
+      console.log("error signing in", error);
+    }
+  };
   return (
     <div className="flex w-full">
       <div className="w-[60%]">
@@ -23,11 +48,17 @@ export default function Page() {
                 className="px-4 border-2 border-solid border-slate-400 rounded my-4 p-2"
                 type="text"
                 placeholder="Enter your email"
+                name="email"
+                value={userData.email}
+                onChange={handleChange}
               />
               <input
                 className="px-4 border-2 border-solid border-slate-400 rounded my-4 p-2"
                 type="text"
                 placeholder="Password"
+                name="password"
+                value={userData.password}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col px-3">
@@ -46,7 +77,10 @@ export default function Page() {
                   Forgot Password?
                 </p>
               </div>
-              <button className="border-2 border-solid rounded bg-blue-600 text-white border-blue-600 my-4 p-2">
+              <button
+                className="border-2 border-solid rounded bg-blue-600 text-white border-blue-600 my-4 p-2"
+                onClick={handleLogin}
+              >
                 Sign In
               </button>
             </div>
