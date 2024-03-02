@@ -1,5 +1,5 @@
 // 'use client'
-// import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SocketProvider from "./_lib/context/socketProvider";
@@ -8,6 +8,10 @@ import LoadingUI from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const metadata: Metadata = {
+  title: "Chit-Chat",
+  description: "Realtime Chat App",
+};
 
 export default function RootLayout({
   children,
