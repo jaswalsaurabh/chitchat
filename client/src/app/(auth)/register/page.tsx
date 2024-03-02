@@ -7,7 +7,6 @@ import { confirmSignUp, signUp } from "aws-amplify/auth";
 import Image from "next/image";
 import MenuIcon from "../../../assets/success.svg";
 
-console.log("this is brp", awsconfig);
 // @ts-ignore
 Amplify.configure({ ...awsconfig });
 
@@ -71,7 +70,6 @@ export default function Page() {
     setUserData({ ...userData, [name]: value });
   };
 
-  console.log("this is value", userData);
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen">

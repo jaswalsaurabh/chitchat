@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import WebSocketContext from "./socketContext";
 import socketConnection from "../socket";
@@ -16,9 +16,8 @@ function SocketProvider({
 }>) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const router = useRouter();
-  console.log("this is router",router);
-  
-  const pathname = window.location.pathname;
+  const pathname = usePathname()
+
   console.log("pathname", pathname);
 
   useEffect(() => {
