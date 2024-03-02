@@ -1,8 +1,4 @@
-"use client";
-import { getCurrentUser } from "@aws-amplify/auth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+'use client'
 import awsconfig from "../aws-exports";
 import { Amplify } from "aws-amplify";
 import SocketProvider from "./_lib/context/socketProvider";
