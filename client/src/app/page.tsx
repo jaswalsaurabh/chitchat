@@ -1,14 +1,12 @@
-"use client";
-import { getCurrentUser } from "@aws-amplify/auth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import awsconfig from "../aws-exports";
-import { Amplify } from "aws-amplify";
 import SocketProvider from "./_lib/context/socketProvider";
+import { Metadata } from "next";
 
 // @ts-ignore
-Amplify.configure({ ...awsconfig });
+
+export const metadata: Metadata = {
+  title: "Chit-Chat",
+  description: "Realtime Chat App",
+};
 
 export default function Home() {
   // console.log("pathname", pathname);
@@ -32,7 +30,6 @@ export default function Home() {
   // }, [router]);
 
   return (
-    <SocketProvider>
       <main className="flex flex-col items-center justify-between p-24">
         <head>
           <a>
@@ -40,6 +37,5 @@ export default function Home() {
           </a>
         </head>
       </main>
-    </SocketProvider>
   );
 }

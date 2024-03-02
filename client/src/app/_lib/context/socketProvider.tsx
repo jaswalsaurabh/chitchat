@@ -1,10 +1,12 @@
-import { useRouter } from "next/navigation";
+'use client'
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import WebSocketContext from "./socketContext";
 import socketConnection from "../socket";
 import awsconfig from "../../../aws-exports";
 import { getCurrentUser } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
+import useWebSocketKeepAlive from "../keepAliveSocket";
 
 // @ts-ignore
 Amplify.configure({ ...awsconfig });
@@ -14,14 +16,14 @@ function SocketProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useWebSocketKeepAlive();
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const router = useRouter();
-  console.log("this is router",router);
-  
-  const pathname = window.location.pathname;
-  console.log("pathname", pathname);
+  const pathname = usePathname()
 
   useEffect(() => {
+    console.log("hello Buddy");
+    
     if (!socketConnection.getSocket() || !socket) {
       const currentAuthenticatedUser = async () => {
         try {
@@ -52,7 +54,7 @@ function SocketProvider({
       setSocket(null);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, []);
 
   if (
     pathname.includes("/login") ||

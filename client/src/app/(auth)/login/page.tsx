@@ -7,6 +7,7 @@ import awsconfig from "../../../aws-exports";
 
 // @ts-ignore
 Amplify.configure({ ...awsconfig });
+
 export default function Page() {
   const router = useRouter();
   const [userData, setUserData] = useState({
@@ -27,7 +28,7 @@ export default function Page() {
         username: userData.email,
         password: userData.password,
       });
-      console.log("singnInRes", singnInRes);
+      // console.log("singnInRes", singnInRes);
       router.push('/chat')
     } catch (error) {
       console.log("error signing in", error);
