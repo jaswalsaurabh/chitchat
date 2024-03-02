@@ -1,14 +1,25 @@
 "use client";
-import React from "react";
+import React, { useRef, useState } from "react";
 import EmojiIcon from "../../assets/emoji.png";
 import AttachIcon from "../../assets/attach.png";
 import MicIcon from "../../assets/mic.png";
 import Image from "next/image";
+import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
 
-function MessageInput({ parentWidth }: { parentWidth: number | null }) {
+function ChatInput({ parentWidth }: { parentWidth: number | null }) {
   const width = parentWidth;
   let widthStyle = width + "px";
-  console.log("width input", widthStyle);
+  // console.log("width input", widthStyle);
+
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [message, setMessage] = useState<string>("");
+
+  useAutosizeTextArea(textAreaRef.current, message);
+
+  const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = evt.target?.value;
+    setMessage(val);
+  };
 
   return (
     <div
@@ -16,7 +27,7 @@ function MessageInput({ parentWidth }: { parentWidth: number | null }) {
     >
       <div className={`flex w-1/2 items-center rounded-md`}>
         <div className="flex w-[91%] items-center bg-white rounded-md">
-          <div className="flex px-4 w-[9%] justify-center cursor-pointer py-3 rounded-md">
+          <div className="flex px-4 w-[9%] justify-center  cursor-pointer py-3 rounded-md">
             <Image
               priority
               src={EmojiIcon}
@@ -25,12 +36,22 @@ function MessageInput({ parentWidth }: { parentWidth: number | null }) {
               alt="user-avatar"
             />
           </div>
-          <input
-            className="p-3 ml-4 w-[91%] outline-none border-none"
-            autoFocus
-            type="text"
+          <div className="flex items-center w-full py-2">
+            {/* <textarea
+            className="p-0 m-0 w-full outline-none border-none"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Type a message.."
-          />
+          /> */}
+            <textarea
+              className="w-full outline-none border-none resize-none"
+              onChange={handleChange}
+              placeholder="Type a message.."
+              ref={textAreaRef}
+              value={message}
+            />
+          </div>
           <div className="flex px-4 w-[9%] justify-center cursor-pointer py-3 rounded-md">
             <Image
               priority
@@ -55,4 +76,4 @@ function MessageInput({ parentWidth }: { parentWidth: number | null }) {
   );
 }
 
-export default MessageInput;
+export default ChatInput;

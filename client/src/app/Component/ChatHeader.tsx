@@ -29,7 +29,7 @@ function ChatHeader() {
     }
     setParentWidth(parent.offsetWidth);
     // Log the width to the console (you can use this value as needed)
-    console.log("Parent div width:", parent.offsetWidth);
+    // console.log("Parent div width:", parent.offsetWidth);
   }, []);
   return (
     <div className="flex flex-row w-full">
@@ -40,7 +40,7 @@ function ChatHeader() {
           historyProps.userInfo ? "flex w-[60%]" : "w-full"
         } h-[92vh] bg-amber-200`}
       >
-        <header className="bg-sky-200 z-10 flex flex-row items-center w-full h-[8vh] min-h-[62px]">
+        <header className="bg-sky-200 flex flex-row items-center w-full h-[8vh] min-h-[62px]">
           <div className="flex-none px-6 cursor-pointer">
             <Image
               priority
