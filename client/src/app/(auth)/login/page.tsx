@@ -28,6 +28,7 @@ export default function Page() {
         password: userData.password,
       });
       console.log("singnInRes", singnInRes);
+      router.push('/chat')
     } catch (error) {
       console.log("error signing in", error);
     }

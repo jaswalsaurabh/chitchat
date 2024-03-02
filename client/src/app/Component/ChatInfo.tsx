@@ -8,7 +8,7 @@ function ChatInfo({ item }: { item: number }) {
   const router = useRouter();
   const handleClick = () => {
     // Your onClick handler logic
-    console.log('item>>',item);
+    // console.log('item>>',item);
     
     router.push("/chat/123" + item);
   };

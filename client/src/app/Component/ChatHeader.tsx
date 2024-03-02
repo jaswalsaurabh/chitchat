@@ -29,7 +29,7 @@ function ChatHeader() {
     }
     setParentWidth(parent.offsetWidth);
     // Log the width to the console (you can use this value as needed)
-    console.log("Parent div width:", parent.offsetWidth);
+    // console.log("Parent div width:", parent.offsetWidth);
   }, []);
   return (
     <div className="flex flex-row w-full">

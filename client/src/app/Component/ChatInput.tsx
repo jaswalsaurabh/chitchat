@@ -9,7 +9,7 @@ import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
 function ChatInput({ parentWidth }: { parentWidth: number | null }) {
   const width = parentWidth;
   let widthStyle = width + "px";
-  console.log("width input", widthStyle);
+  // console.log("width input", widthStyle);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState<string>("");
