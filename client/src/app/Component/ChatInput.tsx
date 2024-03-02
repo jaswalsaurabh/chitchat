@@ -4,7 +4,7 @@ import EmojiIcon from "../../assets/emoji.png";
 import AttachIcon from "../../assets/attach.png";
 import MicIcon from "../../assets/mic.png";
 import Image from "next/image";
-import useAutosizeTextArea from "../hooks/useAutosizeTextArea";
+import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
 
 function ChatInput({ parentWidth }: { parentWidth: number | null }) {
   const width = parentWidth;

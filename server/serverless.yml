@@ -1,4 +1,4 @@
-service: chit-chat
+service: chit-chat-service
 frameworkVersion: "3"
 package:
   individually: true
@@ -17,10 +17,172 @@ provider:
         - cognito-idp:*
       Resource:
         - arn:aws:cognito-idp:us-east-1:734584477105:userpool/us-east-1_Xr2AHQiUF
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - !Join
+          - ":"
+          - - arn:aws:dynamodb:*
+            - !Ref AWS::AccountId
+            - table/${self:provider.stage}-chit-chat
+        - !Join
+          - ":"
+          - - arn:aws:dynamodb:*
+            - !Ref AWS::AccountId
+            - table/${self:provider.stage}-chit-chat/index/*
 plugins:
   - serverless-bundle
   - serverless-offline
   - serverless-dotenv-plugin
+
+resources:
+  Resources:
+    ChatBucket:
+      Type: "AWS::S3::Bucket"
+      Properties:
+        BucketName: chit-chat-store
+        AccessControl: Private
+    ChatTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.stage}-chit-chat
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: sk1
+            AttributeType: S
+          - AttributeName: sk2
+            AttributeType: S
+          - AttributeName: sk3
+            AttributeType: S
+          - AttributeName: sk4
+            AttributeType: S
+          - AttributeName: sk5
+            AttributeType: S
+          - AttributeName: gsi1Pk
+            AttributeType: S
+          - AttributeName: gsi1Sk
+            AttributeType: S
+          - AttributeName: gsi2Pk
+            AttributeType: S
+          - AttributeName: gsi2Sk
+            AttributeType: S
+          - AttributeName: gsi3Pk
+            AttributeType: S
+          - AttributeName: gsi3Sk
+            AttributeType: S
+          - AttributeName: gsi4Pk
+            AttributeType: S
+          - AttributeName: gsi4Sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: GSI1
+            KeySchema:
+              - AttributeName: gsi1Pk
+                KeyType: HASH
+              - AttributeName: gsi1Sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: GSI2
+            KeySchema:
+              - AttributeName: gsi2Pk
+                KeyType: HASH
+              - AttributeName: gsi2Sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: GSI3
+            KeySchema:
+              - AttributeName: gsi3Pk
+                KeyType: HASH
+              - AttributeName: gsi3Sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: GSI4
+            KeySchema:
+              - AttributeName: gsi4Pk
+                KeyType: HASH
+              - AttributeName: gsi4Sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        LocalSecondaryIndexes:
+          - IndexName: LSI1
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: sk1
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: LSI2
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: sk2
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: LSI3
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: sk3
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: LSI4
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: sk4
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: LSI5
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: sk5
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+              
+    LambdaExecutionRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        RoleName: LambdaExecutionRole
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action: "sts:AssumeRole"
+        Policies:
+          - PolicyName: LambdaFunctionS3InvokePolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "s3:GetObject"
+                    - "s3:PutObject"
+                  Resource:
+                    - Fn::Sub: arn:aws:s3:::${ChatBucket}/*
+
+
 
 functions:
   connect:
@@ -33,3 +195,13 @@ functions:
     events:
       - websocket:
           route: $disconnect
+  message:
+    handler: src/services/websockets/message.handler
+    events:
+      - websocket:
+          route: message
+  keepAlive:
+    handler: src/services/websockets/keepAlive.handler
+    events:
+      - websocket:
+          route: keepAlive

@@ -2,11 +2,11 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import WebSocketContext from "./socketContext";
-import socketConnection from "../socket";
-import awsconfig from "../../../aws-exports";
-import { getCurrentUser } from "@aws-amplify/auth";
+import socketConnection from "../app/_lib/socket";
+import awsconfig from "../aws-exports";
+import { fetchAuthSession } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
-import useWebSocketKeepAlive from "../keepAliveSocket";
+import useWebSocketKeepAlive from "../app/_lib/keepAliveSocket";
 
 // @ts-ignore
 Amplify.configure({ ...awsconfig });
@@ -27,7 +27,7 @@ function SocketProvider({
     if (!socketConnection.getSocket() || !socket) {
       const currentAuthenticatedUser = async () => {
         try {
-          const currentUser = await getCurrentUser();
+          const currentUser = await fetchAuthSession();
           console.log("this is currentUser", currentUser);
 
           if (currentUser) {

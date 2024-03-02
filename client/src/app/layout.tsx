@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SocketProvider from "./_lib/context/socketProvider";
+import SocketProvider from "../context/socketProvider";
 import { Suspense } from "react";
 import LoadingUI from "./loading";
 
