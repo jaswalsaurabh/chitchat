@@ -9,13 +9,15 @@ function ChatInfo({ item }: { item: number }) {
   const handleClick = () => {
     // Your onClick handler logic
     // console.log('item>>',item);
-    
+
     router.push("/chat/123" + item);
   };
   return (
     <div
-      className="flex items-center cursor-pointer w-full h-auto bg-white p-2 border-t border-slate-50s hover:bg-slate-100 hover:border-none"
-      onClick={() => handleClick()}
+      className={`flex items-center cursor-pointer w-full h-auto bg-white p-2 ${
+        item == 1 ? "border-none" : "border-t border-slate-200"
+      } hover:bg-slate-100`}
+      onClick={handleClick}
     >
       <div className="w-20">
         <Image

@@ -13,8 +13,8 @@ function UserInfo({ item }: { item: number }) {
     router.push("/chat/123" + item);
   };
   return (
-    <div className="flex flex-col items-center justify-center bg-slate-50">
-      <div className="flex flex-col items-center justify-center mt-4">
+    <div className="flex flex-col items-center bg-slate-50 h-[84vh]">
+      <div className="flex flex-col items-center mt-4 h-1/2">
         <Image
           priority
           src={UserImage}
@@ -22,7 +22,20 @@ function UserInfo({ item }: { item: number }) {
           width={150}
           alt="user-avatar"
         />
-        <p>Jaswal</p>
+        <p>Saurabh Jaswal</p>
+        <div>
+          <p>Active 3 minutes ago</p>
+        </div>
+      </div>
+      <div className="flex flex-col w-full bg-cyan-100 h-1/2">
+        <div>
+          <p>Email</p>
+          <p>jaswal@hotmail.com</p>
+        </div>
+        <div>
+          <p>Media</p>
+          <div></div>
+        </div>
       </div>
     </div>
   );
