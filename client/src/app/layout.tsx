@@ -1,6 +1,10 @@
+// 'use client'
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import SocketProvider from "../context/socketProvider";
+import { Suspense } from "react";
+import LoadingUI from "./loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <header className="bg-sky-300 p-4">
-          <p>Common Header</p>
-        </header> */}
-        {children}
-        {/* <footer className="bg-yellow-200 p-4">
-          <p>Common Footer</p>
-        </footer> */}
+        <Suspense fallback={<LoadingUI />}>
+          <SocketProvider>{children}</SocketProvider>
+        </Suspense>
       </body>
     </html>
   );

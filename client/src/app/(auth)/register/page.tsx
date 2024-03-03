@@ -41,13 +41,13 @@ export default function Page() {
           },
         },
       };
-      console.log("signup Params", signupParams);
+      // console.log("signup Params", signupParams);
 
       try {
         let registerUser = await signUp(signupParams);
 
         setActive({ success: false, register: false, confirmation: true });
-        console.log("this is register User", registerUser);
+        // console.log("this is register User", registerUser);
       } catch (error) {
         console.log("this is error in register account >>", error);
       }
@@ -70,6 +70,7 @@ export default function Page() {
     setUserData({ ...userData, [name]: value });
   };
 
+  // console.log("this is value", userData);
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen">

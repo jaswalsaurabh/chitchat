@@ -1,10 +1,12 @@
+"use client";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import WebSocketContext from "./socketContext";
-import socketConnection from "../socket";
-import awsconfig from "../../../aws-exports";
-import { getCurrentUser } from "@aws-amplify/auth";
+import socketConnection from "../app/_lib/socket";
+import awsconfig from "../aws-exports";
+import { fetchAuthSession } from "@aws-amplify/auth";
 import { Amplify } from "aws-amplify";
+import useWebSocketKeepAlive from "../app/_lib/keepAliveSocket";
 
 // @ts-ignore
 Amplify.configure({ ...awsconfig });
@@ -14,24 +16,29 @@ function SocketProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useWebSocketKeepAlive();
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const router = useRouter();
-  const pathname = usePathname()
-
-  console.log("pathname", pathname);
+  const pathname = usePathname();
 
   useEffect(() => {
+    console.log("hello Buddy");
+
     if (!socketConnection.getSocket() || !socket) {
       const currentAuthenticatedUser = async () => {
         try {
-          const currentUser = await getCurrentUser();
-          console.log("this is currentUser", currentUser);
+          const currentUser = (await fetchAuthSession()).tokens;
+          console.log(
+            "this is currentUser >>",
+            currentUser?.accessToken.toString()
+          );
+          const token = currentUser?.accessToken.toString();
 
           if (currentUser) {
             router.push("/chat");
             // `${process.env.REACT_APP_SOCKET_URL}?user=${response.accessToken.jwtToken}`
             let newSocket = socketConnection.connect(
-              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}`
+              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
             );
             setSocket(newSocket);
           }
@@ -50,8 +57,8 @@ function SocketProvider({
       socketConnection.close();
       setSocket(null);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (
     pathname.includes("/login") ||
