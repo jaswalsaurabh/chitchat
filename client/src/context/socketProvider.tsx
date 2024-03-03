@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import WebSocketContext from "./socketContext";
@@ -19,22 +19,26 @@ function SocketProvider({
   useWebSocketKeepAlive();
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
     console.log("hello Buddy");
-    
+
     if (!socketConnection.getSocket() || !socket) {
       const currentAuthenticatedUser = async () => {
         try {
-          const currentUser = await fetchAuthSession();
-          console.log("this is currentUser", currentUser);
+          const currentUser = (await fetchAuthSession()).tokens;
+          console.log(
+            "this is currentUser >>",
+            currentUser?.accessToken.toString()
+          );
+          const token = currentUser?.accessToken.toString();
 
           if (currentUser) {
             router.push("/chat");
             // `${process.env.REACT_APP_SOCKET_URL}?user=${response.accessToken.jwtToken}`
             let newSocket = socketConnection.connect(
-              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}`
+              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
             );
             setSocket(newSocket);
           }
@@ -53,7 +57,7 @@ function SocketProvider({
       socketConnection.close();
       setSocket(null);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (

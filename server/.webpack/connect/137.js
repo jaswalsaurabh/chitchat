@@ -1,0 +1,3 @@
+"use strict";exports.id=137,exports.ids=[137],exports.modules={1137:(_,s,E)=>{E.r(s),E.d(s,{ENV_CREDENTIAL_SCOPE:()=>c,ENV_EXPIRATION:()=>t,ENV_KEY:()=>e,ENV_SECRET:()=>n,ENV_SESSION:()=>o,fromEnv:()=>I});var C=E(6034);const e="AWS_ACCESS_KEY_ID",n="AWS_SECRET_ACCESS_KEY",o="AWS_SESSION_TOKEN",t="AWS_CREDENTIAL_EXPIRATION",c="AWS_CREDENTIAL_SCOPE",I=i=>async()=>{i?.logger?.debug("@aws-sdk/credential-provider-env","fromEnv");const S=process.env[e],r=process.env[n],N=process.env[o],d=process.env[t],A=process.env[c];if(S&&r)return{accessKeyId:S,secretAccessKey:r,...N&&{sessionToken:N},...d&&{expiration:new Date(d)},...A&&{credentialScope:A}};throw new C.C1("Unable to find environment variable credentials.")}}};
+
+//# sourceMappingURL=137.js.map

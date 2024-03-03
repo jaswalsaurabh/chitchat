@@ -1,4 +1,4 @@
-service: chit-chat-service
+service: chit-chat
 frameworkVersion: "3"
 package:
   individually: true
