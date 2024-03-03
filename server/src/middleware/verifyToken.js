@@ -9,7 +9,7 @@ const {
  */
 
 export const verifyToken = async (event) => {
-  console.log("request %j", event);
+//   console.log("request %j", event);
   try {
     const accessToken = {
       AccessToken:

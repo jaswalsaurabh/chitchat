@@ -2,3 +2,4 @@ node_modules
 .env
 server/.serverless/
 server/.env
+server/.webpack

@@ -103,3 +103,21 @@ export const updatePresence = async (user) => {
     console.log("error in updaing presence %j >>", error);
   }
 };
+
+export const getUserWithConnection = async (CONN_ID) => {
+    const TableParam = {
+      TableName,
+      IndexName: "LSI3",
+      KeyConditionExpression: "pk = :pkey and sk3 = :connId", //and sk <= :timestamp
+      ExpressionAttributeValues: {
+        ":pkey": `USRPR#usr`,
+        ":connId": `CONN#${CONN_ID}`,
+      },
+    };
+    try {
+      const data = await dbClient.query(TableParam);
+      return data;
+    } catch (error) {
+      console.log("error %j >>", error);
+    }
+  };

@@ -7,7 +7,9 @@ exports.handler = async (event, context, callback) => {
   console.log("this is event in connect %j", event);
   try {
     const { userConnxnId: connectionId } = extractEvent(event);
-    const user = verifyToken(event);
+
+    const user = await verifyToken(event);
+
     const userDetails = { profileImage: "" };
     userDetails.userName = user.Username;
     user.UserAttributes.forEach((element) => {
@@ -15,20 +17,21 @@ exports.handler = async (event, context, callback) => {
         userDetails.name = element.Value;
       } else if (element.Name === "sub") {
         userDetails.userId = element.Value;
-      } else if (element.Name === "custom:profileImage") {
-        userDetails.profileImage = element.Value || "";
+      } else if (element.Name === "email") {
+        userDetails.email = element.Value;
       }
     });
+
     const body = {
       userId: userDetails.userId,
       connectionId,
-      userType: userDetails.userType || "Patient",
       user,
       userDetails,
       status: USER_PRESENCE_STATUS.ONLINE,
     };
-    console.log("this is body ", body);
+
     await presenceEntry(body);
+
     callback(null, {
       statusCode: 200,
     });
