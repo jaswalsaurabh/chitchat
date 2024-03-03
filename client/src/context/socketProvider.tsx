@@ -29,7 +29,7 @@ function SocketProvider({
         try {
           const currentUser = (await fetchAuthSession()).tokens;
           console.log(
-            "this is currentUser >>",
+            "this is currentUser context",
             currentUser?.accessToken.toString()
           );
           const token = currentUser?.accessToken.toString();
@@ -41,9 +41,11 @@ function SocketProvider({
               `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
             );
             setSocket(newSocket);
+          } else {
+            router.push("/login");
           }
         } catch (err) {
-          console.log(err);
+          console.log("err in context", err);
           router.push("/login");
           setSocket(null);
           return false;
