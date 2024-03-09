@@ -1,10 +1,4 @@
-import { fetchAuthSession } from "@aws-amplify/auth";
 import { createSlice } from "@reduxjs/toolkit";
-import { Amplify } from "aws-amplify";
-import awsconfig from "../aws-exports";
-
-// @ts-ignore
-Amplify.configure({ ...awsconfig });
 
 const initialState = { authObj: null, loading: false };
 

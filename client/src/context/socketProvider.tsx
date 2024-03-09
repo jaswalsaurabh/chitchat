@@ -28,10 +28,6 @@ function SocketProvider({
       const currentAuthenticatedUser = async () => {
         try {
           const currentUser = (await fetchAuthSession()).tokens;
-          console.log(
-            "this is currentUser context",
-            currentUser?.accessToken.toString()
-          );
           const token = currentUser?.accessToken.toString();
 
           if (currentUser) {

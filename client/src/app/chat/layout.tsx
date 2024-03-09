@@ -3,8 +3,11 @@ import ChatInfo from "@/app/Component/ChatInfo";
 import Image from "next/image";
 import UserImage from "../../assets/user.svg";
 import Notification from "../../assets/notify.svg";
+import Audio from "../../assets/audio-call.svg";
+import Video from "../../assets/video-call.svg";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function RootLayout({
   children,
@@ -16,9 +19,13 @@ export default function RootLayout({
   const pathname = usePathname();
   const pathLength = pathname.split("/");
   console.log("this is pathname", pathLength);
-  const [isCall, setIsCall] = useState(true);
-  
-  if (!isCall) {
+  const [isCall, setIsCall] = useState(false);
+
+  const callSlice = useSelector((state: any) => state.CallSlice);
+
+  console.log("this is callSlice", callSlice);
+
+  if (!callSlice.isCalling) {
     return (
       <div className="flex flex-col">
         <div className="flex h-[8vh] min-h-[63px] sticky top-0">
@@ -80,7 +87,7 @@ export default function RootLayout({
       </div>
     );
   }
-  if (isCall) {
+  if (callSlice.isCalling) {
     return (
       <div className="bg-[#202325] flex flex-col text-white h-screen">
         <div className="flex min-h-[10px] justify-between"></div>
@@ -92,18 +99,7 @@ export default function RootLayout({
             </div>
             <div className="h-[80%] flex justify-center items-center">
               Image
-            </div>
-            <div className="flex h-[10%] items-center justify-between mx-2">
-              <h1>Michael Smyth</h1>
-              <h2>Mic</h2>
-            </div>
-          </div>
-          <div className="flex justify-end flex-col flex-1 border mx-5 rounded-2xl border-green-400">
-            <div className="h-[10%] flex items-center justify-end mx-2">
-              Extra
-            </div>
-            <div className="h-[80%] flex justify-center items-center">
-              Image
+              <video autoPlay />
             </div>
             <div className="flex h-[10%] items-center justify-between mx-2">
               <h1>Michael Smyth</h1>
@@ -112,40 +108,41 @@ export default function RootLayout({
           </div>
         </div>
 
-        <div className="flex h-[20%] justify-end mr-5" >
-
+        <div className="flex h-[20%] justify-end mr-5">
           <div className="flex relative h-full w-[20%] rounded-2xl my-4 mr-5 flex-col border border-green-500">
-            <div className="flex items-center h-full justify-center" >Image</div>
-            <div className="flex absolute right-0 bottom-0 justify-end mr-2" >Me</div>
+            <div className="flex items-center h-full justify-center">Image</div>
+            <div className="flex absolute right-0 bottom-0 justify-end mr-2">
+              Me
+            </div>
           </div>
+        </div>
 
+        <div className="bottom-0 flex-1 w-full py-2 items-center flex justify-around">
+          <div className="flex">
+            <h1>34:12</h1>
           </div>
-
-          <div className="bottom-0 flex-1 w-full py-2 items-center flex justify-around">
-            <div className="flex">
-              <h1>34:12</h1>
-            </div>
-            <div className="flex">
-              <h1>Mute</h1>
-            </div>
-            <div className="flex">
-              <h1>Stop Video</h1>
-            </div>
-            <div className="flex">
-              <h1>Raise Hand</h1>
-            </div>
-            <div className="flex">
-              <h1>Share Screen</h1>
-            </div>
-            <div className="flex">
-              <h1>Start Record</h1>
-            </div>
-            <div className="flex">
-              <h1>More</h1>
-            </div>
-            <div className="flex bg-red-700 h-[40%] p-4 items-center rounded">End Call</div>
+          <div className="flex">
+            <h1>Mute</h1>
           </div>
-
+          <div className="flex">
+            <h1>Stop Video</h1>
+          </div>
+          <div className="flex">
+            <h1>Raise Hand</h1>
+          </div>
+          <div className="flex">
+            <h1>Share Screen</h1>
+          </div>
+          <div className="flex">
+            <h1>Start Record</h1>
+          </div>
+          <div className="flex">
+            <h1>More</h1>
+          </div>
+          <div className="flex bg-red-700 h-[40%] p-4 items-center rounded">
+            End Call
+          </div>
+        </div>
       </div>
     );
   }

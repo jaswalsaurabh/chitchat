@@ -4,23 +4,32 @@ import Image from "next/image";
 import UserImage from "../../assets/user.svg";
 import SearchIcon from "../../assets/search.png";
 import MenuIcon from "../../assets/menu.png";
+import Audio from "../../assets/audio-call.svg";
+import Video from "../../assets/video-call.svg";
 import CloseIcon from "../../assets/close.svg";
 import UserInfo from "@/app/Component/UserInfo";
 import ChatHistory from "./ChatHistory";
+import { useDispatch } from "react-redux";
+import { updateCallState } from "@/store/callSlice";
 
 function ChatHeader() {
   const [historyProps, setHistoryProps] = useState({
     userInfo: false,
     search: false,
   });
+
+  const [parentWidth, setParentWidth] = useState<number | null>(null);
+  const dispatch = useDispatch();
+
   function handleUserInfo() {
     setHistoryProps({ ...historyProps, userInfo: true });
   }
+
   function closeProfile() {
     setHistoryProps({ ...historyProps, userInfo: false });
   }
   //   const parentWidth = useRef<number | null>(null);
-  const [parentWidth, setParentWidth] = useState<number | null>(null);
+
   useEffect(() => {
     const parent = document.getElementById("flexDiv");
     // Get the width of the parent div
@@ -31,6 +40,19 @@ function ChatHeader() {
     // Log the width to the console (you can use this value as needed)
     // console.log("Parent div width:", parent.offsetWidth);
   }, []);
+
+  const handleInitiateCall = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: {
+        width: { min: 1024, ideal: 1280, max: 1920 },
+        height: { min: 576, ideal: 720, max: 1080 },
+      },
+    });
+
+    dispatch(updateCallState({ callObj: stream, isCalling: true }));
+  };
+
   return (
     <div className="flex flex-row w-full">
       {" "}
@@ -58,6 +80,30 @@ function ChatHeader() {
           </div>
           <div className="flex-none pr-6">
             <div className="flex items-center">
+              <div
+                onClick={handleInitiateCall}
+                className="relative text-xl cursor-pointer p-2 rounded"
+              >
+                <Image
+                  priority
+                  src={Audio}
+                  height={30}
+                  width={20}
+                  alt="user-avatar"
+                />
+              </div>
+              <div
+                onClick={handleInitiateCall}
+                className="relative text-xl cursor-pointer p-2 rounded"
+              >
+                <Image
+                  priority
+                  src={Video}
+                  height={30}
+                  width={20}
+                  alt="user-avatar"
+                />
+              </div>
               <div className="relative text-xl cursor-pointer p-2 rounded">
                 <Image
                   priority

@@ -1,17 +1,14 @@
-// 'use client'
-import type { Metadata } from "next";
+"use client";
+
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SocketProvider from "../context/socketProvider";
 import { Suspense } from "react";
 import LoadingUI from "./loading";
+import { Provider } from "react-redux";
+import store from "@/store/store";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Chit-Chat",
-  description: "Realtime Chat App",
-};
 
 export default function RootLayout({
   children,
@@ -22,7 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Suspense fallback={<LoadingUI />}>
-          <SocketProvider>{children}</SocketProvider>
+          <SocketProvider>
+            <Provider store={store}>{children}</Provider>
+          </SocketProvider>
         </Suspense>
       </body>
     </html>
