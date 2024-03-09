@@ -6,8 +6,9 @@ import Notification from "../../assets/notify.svg";
 import Audio from "../../assets/audio-call.svg";
 import Video from "../../assets/video-call.svg";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCallState } from "@/store/callSlice";
 
 export default function RootLayout({
   children,
@@ -18,12 +19,40 @@ export default function RootLayout({
   const filledArray = Array.from({ length }, (_, index) => index + 1);
   const pathname = usePathname();
   const pathLength = pathname.split("/");
-  console.log("this is pathname", pathLength);
-  const [isCall, setIsCall] = useState(false);
-
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  
+  // console.log("this is pathname", pathLength);
+  const dispatch = useDispatch()
   const callSlice = useSelector((state: any) => state.CallSlice);
+  
+  console.log("this is callSlice>>", callSlice);
+  const getStream = async () => {
+    const stream = await window.navigator.mediaDevices.getUserMedia({
+      video: true,
+      // audio: true,
+    });
+    setLocalStream(stream);
+    if (videoRef.current && !videoRef.current.srcObject) {
+      videoRef.current.srcObject = stream;
+    }
+  };
 
-  console.log("this is callSlice", callSlice);
+  useEffect(() => {
+    if (callSlice.isCalling) {
+      getStream();
+    }
+  }, [callSlice.isCalling]);
+
+  const handleCall = () => {
+    if (videoRef.current) {
+      const tracks = localStream?.getTracks();
+      tracks?.forEach((track) => track.stop());
+
+      videoRef.current.srcObject = null;
+      dispatch(updateCallState({ isCalling: false }));
+    }
+  };
 
   if (!callSlice.isCalling) {
     return (
@@ -89,28 +118,33 @@ export default function RootLayout({
   }
   if (callSlice.isCalling) {
     return (
-      <div className="bg-[#202325] flex flex-col text-white h-screen">
-        <div className="flex min-h-[10px] justify-between"></div>
+      <div className=" bg-[#202325] flex flex-col absolute w-full text-white h-screen">
+        {/* <div className="flex min-h-[10px] justify-between"></div> */}
 
-        <div className="flex mt-5 h-[60%] mx-5">
-          <div className="flex flex-col flex-1 border mx-5 rounded-2xl border-green-400">
-            <div className="h-[10%] flex items-center justify-end mx-2">
+        <div className="flex mt-5 relative w-auto h-[60%] mx-5">
+          <div className="flex flex-col flex-1 border relative mx-5 rounded-2xl border-green-400">
+            <div className="h-[10%] absolute right-0 flex items-center justify-end mx-2">
               Extra
             </div>
-            <div className="h-[80%] flex justify-center items-center">
-              Image
-              <video autoPlay />
+            <div className="h-[100%] relative flex justify-center items-center">
+              <video
+                className="relative h-full aspect-video"
+                ref={videoRef}
+                autoPlay
+              />
             </div>
-            <div className="flex h-[10%] items-center justify-between mx-2">
-              <h1>Michael Smyth</h1>
-              <h2>Mic</h2>
+            <div className="flex h-[10%] absolute bottom-0 w-full items-center justify-between ">
+              <h1 className="relative right-0 mx-2">Michael Smyth</h1>
+              <h2 className="relative left-0 mx-2">Mic</h2>
             </div>
           </div>
         </div>
 
         <div className="flex h-[20%] justify-end mr-5">
           <div className="flex relative h-full w-[20%] rounded-2xl my-4 mr-5 flex-col border border-green-500">
-            <div className="flex items-center h-full justify-center">Image</div>
+            <div className="flex items-center h-full justify-center">
+              {/* <video className="relative h-full aspect-video" ref={videoRef} autoPlay /> */}
+            </div>
             <div className="flex absolute right-0 bottom-0 justify-end mr-2">
               Me
             </div>
@@ -139,7 +173,10 @@ export default function RootLayout({
           <div className="flex">
             <h1>More</h1>
           </div>
-          <div className="flex bg-red-700 h-[40%] p-4 items-center rounded">
+          <div
+            onClick={handleCall}
+            className="flex bg-red-700 cursor-pointer h-[40%] p-4 items-center rounded"
+          >
             End Call
           </div>
         </div>

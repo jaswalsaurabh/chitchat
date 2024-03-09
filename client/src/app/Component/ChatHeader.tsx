@@ -42,15 +42,7 @@ function ChatHeader() {
   }, []);
 
   const handleInitiateCall = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: {
-        width: { min: 1024, ideal: 1280, max: 1920 },
-        height: { min: 576, ideal: 720, max: 1080 },
-      },
-    });
-
-    dispatch(updateCallState({ callObj: stream, isCalling: true }));
+    dispatch(updateCallState({ isCalling: true }));
   };
 
   return (
