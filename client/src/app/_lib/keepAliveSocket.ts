@@ -6,7 +6,7 @@ const useWebSocketKeepAlive = (pingInterval = 130000) => {
   useEffect(() => {
     const keepAlive = () => {
       try {
-        socketConnection.emit("keepAlive", {});
+        socketConnection.emit("keepAlive", {name:"Don"});
       } catch (error) {
         console.error("Error in keep-alive request:", error);
       }

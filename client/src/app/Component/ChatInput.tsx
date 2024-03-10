@@ -5,6 +5,8 @@ import AttachIcon from "../../assets/attach.png";
 import MicIcon from "../../assets/mic.png";
 import Image from "next/image";
 import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
+import SocketProvider from "@/context/socketProvider";
+import socketConnection from "../_lib/socket";
 
 function ChatInput({ parentWidth }: { parentWidth: number | null }) {
   const width = parentWidth;
@@ -19,6 +21,14 @@ function ChatInput({ parentWidth }: { parentWidth: number | null }) {
   const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = evt.target?.value;
     setMessage(val);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter") {
+      console.log("Enter pressed");
+
+      socketConnection.emit("message", { message });
+    }
   };
 
   return (
@@ -47,6 +57,7 @@ function ChatInput({ parentWidth }: { parentWidth: number | null }) {
             <textarea
               className="w-full outline-none border-none resize-none"
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               placeholder="Type a message.."
               ref={textAreaRef}
               value={message}

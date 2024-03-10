@@ -33,9 +33,8 @@ function SocketProvider({
           if (currentUser) {
             router.push("/chat");
             // `${process.env.REACT_APP_SOCKET_URL}?user=${response.accessToken.jwtToken}`
-            let newSocket = socketConnection.connect(
-              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
-            );
+            // `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
+            let newSocket = socketConnection.connect("ws://localhost:8080");
             setSocket(newSocket);
           } else {
             router.push("/login");

@@ -7,10 +7,9 @@ import Notification from "../../assets/notify.svg";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addEventsData, updateCallState } from "@/store/callSlice";
+import { updateCallState } from "@/store/callSlice";
 import socketConnection from "../_lib/socket";
 import { usePeerHook } from "@/hooks/usePeerConnection";
-import { Lexend_Tera } from "next/font/google";
 
 export default function RootLayout({
   children,
@@ -21,33 +20,47 @@ export default function RootLayout({
   const filledArray = Array.from({ length }, (_, index) => index + 1);
   const pathname = usePathname();
   const pathLength = pathname.split("/");
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   // local
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [localPeer, setLocalPeer] = useState<RTCPeerConnection | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   // remote
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [remotePeer, setRemotePeer] = useState<RTCPeerConnection | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
+  const [sender, setSender] = useState(true);
+
+  // console.log("this is pathname", pathLength);
   const dispatch = useDispatch();
   const toRef = useRef<string>("");
   const callSlice = useSelector((state: any) => state.CallSlice);
-  let [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(
-    null
-  );
 
   const {
-    // peer: peerConnection,
-    // saveAnswerSendCandidate,
+    peer: peerConnection,
+    saveAnswerSendCandidate,
     saveOfferSendAnswer,
   } = usePeerHook();
 
   console.log("this is callSlice>>", callSlice);
 
-  const createNewPeerConnection = () => {
-    console.log("created peer");
-    let connection = new RTCPeerConnection();
-    setPeerConnection(connection);
-    return connection;
-  };
+  // const getStream = async () => {
+  //   const stream = await window.navigator.mediaDevices.getUserMedia({
+  //     video: true,
+  //     // audio: true,
+  //   });
+
+  //   setLocalStream(stream);
+  //   if (localVideoRef.current && !localVideoRef.current.srcObject) {
+  //     localVideoRef.current.srcObject = stream;
+  //   }
+  //   if (peerConnection) {
+  //     const offer = await peerConnection.createOffer();
+  //     socketConnection.emit("offer", { payload: offer, to: callSlice.callObj });
+  //     await peerConnection.setLocalDescription(offer);
+  //     setLocalPeer(peerConnection);
+  //   }
+  // };
 
   const getMedia = async () => {
     try {
@@ -56,23 +69,20 @@ export default function RootLayout({
         // audio: true,
       });
       setLocalStream(stream);
-      createNewPeerConnection();
       // Display local video
       if (localVideoRef.current && !localVideoRef.current.srcObject) {
         localVideoRef.current.srcObject = stream;
       }
       // Add tracks to the peer connection
-      // if (stream && peerConnection) {
-      //   stream
-      //     .getTracks()
-      //     .forEach((track) => peerConnection.addTrack(track, stream));
-      // }
+      if (stream && peerConnection) {
+        stream
+          .getTracks()
+          .forEach((track) => peerConnection.addTrack(track, stream));
+      }
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
   };
-
-  console.log("layout peer", peerConnection);
 
   const createOffer = async () => {
     try {
@@ -91,8 +101,6 @@ export default function RootLayout({
   };
 
   const receiveOffer = async (offer: any) => {
-    console.log("in receiveOffer", peerConnection);
-
     try {
       if (peerConnection) {
         await peerConnection.setRemoteDescription(
@@ -154,47 +162,48 @@ export default function RootLayout({
     }
   };
 
+  useEffect(() => {
+    if (peerConnection) {
+      peerConnection.ontrack = (event) => {
+        // Display remote video
+        console.log("get remote track", event);
 
-  const handleIncoming = () => {
-    dispatch(addEventsData({ payload: true, key: "incoming" }));
-    getMedia();
-    createOffer();
+        if (remoteVideoRef.current && !remoteVideoRef.current.srcObject) {
+          remoteVideoRef.current.srcObject = event.streams[0];
+        }
+      };
+    }
+  }, []);
+
+  const handleOffer = (data: any) => {
+    setSender(false)
+    saveOfferSendAnswer(data);
   };
 
   useEffect(() => {
-    socketConnection.on("offer", receiveOffer);
-    socketConnection.on("call", handleIncoming);
-    socketConnection.on("answer", receiveAnswer);
+    socketConnection.on("offer", handleOffer);
+    socketConnection.on('call',createOffer)
+    socketConnection.on("answer", saveAnswerSendCandidate);
     socketConnection.on("onicecandidate", handleReceivedIceCandidate);
   }, []);
 
   useEffect(() => {
     if (callSlice.isCalling) {
-      getMedia();
+    getMedia()
     }
-    if (callSlice.answered) {
-      getMedia();
-      createOffer();
-    }
-  }, [callSlice]);
+  }, [callSlice.isCalling]);
 
-  const handleEndCall = () => {
+  const handleCall = () => {
     if (localVideoRef.current) {
       const tracks = localStream?.getTracks();
       tracks?.forEach((track) => track.stop());
 
       localVideoRef.current.srcObject = null;
-      dispatch(
-        updateCallState({
-          isCalling: false,
-          callScreen: false,
-          answered: false,
-        })
-      );
+      dispatch(updateCallState({ isCalling: false }));
     }
   };
 
-  if (!callSlice.callScreen) {
+  if (!callSlice.isCalling) {
     return (
       <div className="flex flex-col">
         <div className="flex h-[8vh] min-h-[63px] sticky top-0">
@@ -256,7 +265,7 @@ export default function RootLayout({
       </div>
     );
   }
-  if (callSlice.callScreen) {
+  if (callSlice.isCalling) {
     return (
       <div className=" bg-[#202325] flex flex-col absolute w-full text-white h-screen">
         {/* <div className="flex min-h-[10px] justify-between"></div> */}
@@ -318,7 +327,7 @@ export default function RootLayout({
             <h1>More</h1>
           </div>
           <div
-            onClick={handleEndCall}
+            onClick={handleCall}
             className="flex bg-red-700 cursor-pointer h-[40%] p-4 items-center rounded"
           >
             End Call

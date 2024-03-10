@@ -9,8 +9,10 @@ import Video from "../../assets/video-call.svg";
 import CloseIcon from "../../assets/close.svg";
 import UserInfo from "@/app/Component/UserInfo";
 import ChatHistory from "./ChatHistory";
-import { useDispatch } from "react-redux";
-import { updateCallState } from "@/store/callSlice";
+import { useDispatch, useSelector } from "react-redux";
+import callSlice, { addEventsData, updateCallState } from "@/store/callSlice";
+import { usePeerHook } from "@/hooks/usePeerConnection";
+import socketConnection from "../_lib/socket";
 
 function ChatHeader() {
   const [historyProps, setHistoryProps] = useState({
@@ -19,6 +21,9 @@ function ChatHeader() {
   });
 
   const [parentWidth, setParentWidth] = useState<number | null>(null);
+  const [value, setValue] = useState<string>("");
+  const callSlice = useSelector((state: any) => state.CallSlice);
+  const { saveRecipient } = usePeerHook();
   const dispatch = useDispatch();
 
   function handleUserInfo() {
@@ -42,7 +47,19 @@ function ChatHeader() {
   }, []);
 
   const handleInitiateCall = async () => {
-    dispatch(updateCallState({ isCalling: true }));
+    socketConnection.emit("call", { to: value });
+    dispatch(
+      updateCallState({ isCalling: true, callScreen: true, callObj: value })
+    );
+  };
+
+  const answerCall = async () => {
+    dispatch(
+      updateCallState({ callScreen: true, callObj: value, answered: true })
+    );
+    // dispatch(
+    //   addEventsData({ payload: true, callScreen: true, key: "answered" })
+    // );
   };
 
   return (
@@ -73,12 +90,12 @@ function ChatHeader() {
           <div className="flex-none pr-6">
             <div className="flex items-center">
               <div
-                onClick={handleInitiateCall}
+                onClick={callSlice.incoming ? answerCall : handleInitiateCall}
                 className="relative text-xl cursor-pointer p-2 rounded"
               >
                 <Image
                   priority
-                  src={Audio}
+                  src={callSlice.incoming ? CloseIcon : Audio}
                   height={30}
                   width={20}
                   alt="user-avatar"
@@ -97,12 +114,21 @@ function ChatHeader() {
                 />
               </div>
               <div className="relative text-xl cursor-pointer p-2 rounded">
-                <Image
+                {/* <Image
                   priority
                   src={SearchIcon}
                   height={30}
                   width={20}
                   alt="user-avatar"
+                /> */}
+                <input
+                  type="text"
+                  placeholder="1"
+                  value={value}
+                  onChange={(e) => {
+                    setValue(e.target.value);
+                    saveRecipient(e.target.value);
+                  }}
                 />
               </div>
               <div className="relative ml-1 text-xl cursor-pointer p-2">

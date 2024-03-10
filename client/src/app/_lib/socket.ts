@@ -1,3 +1,5 @@
+import store from "@/store/store";
+
 class SocketConnection {
   private url: string | null = null;
   private socket: WebSocket | null = null;
@@ -21,13 +23,16 @@ class SocketConnection {
     this.socket.addEventListener("message", (event) => {
       const message = JSON.parse(event.data);
       const { route: eventName, ...data } = message;
+      console.log("this is data from socket server", message);
+
       // Assuming store is declared and available in the scope
-      // let state = store.getState();
-      // if (this.eventHandlers[eventName]) {
-      //   this.eventHandlers[eventName].forEach((handler) =>
-      //     handler(data, state)
-      //   );
-      // }
+
+      let state = store.getState();
+      if (this.eventHandlers[eventName]) {
+        this.eventHandlers[eventName].forEach((handler) =>
+          handler(data, state)
+        );
+      }
     });
 
     this.socket.addEventListener("close", (event) => {

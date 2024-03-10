@@ -1,18 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = { callObj: null, isCalling: false };
+const initialState = {
+  callObj: null,
+  callScreen: false,
+  incoming: false,
+  isCalling: false,
+  answered: false,
+};
 
 const CallSlice = createSlice({
   name: "callSlice",
   initialState,
   reducers: {
     updateCallState(state, action) {
-      const { callObj, isCalling } = action.payload;
-      return { ...state, callObj, isCalling };
+      return { ...state, ...action.payload };
+    },
+    addEventsData(state, action) {
+      const { key, payload } = action.payload;
+      return { ...state, [key]: payload };
     },
   },
 });
 
-export const { updateCallState } = CallSlice.actions;
+export const { updateCallState, addEventsData } = CallSlice.actions;
 
 export default CallSlice.reducer;
