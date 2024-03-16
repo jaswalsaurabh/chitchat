@@ -3,6 +3,7 @@ const {
   chatEntry,
   getChat,
   getUserDetails,
+  updateUnreadMessage,
 } = require("../../dbCrud/messageCrud");
 const { MESSAGE_STATUS } = require("../../enum/constants");
 const { extractEvent } = require("../../helpers/extractEvent");
@@ -60,8 +61,20 @@ exports.handler = async (event, context, callback) => {
     );
 
     const receiver = await getUserDetails(body.receiver.userId);
+    console.log("this is receiver data at 64 %j", receiver);
 
-    if (receiver) {
+    if (receiver.presenceStatus === "OFFLINE") {
+      // update the count of unread message in chat for receiver
+      console.log('inside');
+      const chat = await getChat(body.receiver.userId, body.sender.userId);
+      console.log('inside 2 chat %j',chat);
+      const count = (chat.unreadCount || 0) + 1;
+      console.log("this is count ", count);
+      await updateUnreadMessage(body.receiver, body.sender, count);
+      console.log("this 333 ", );
+    }
+
+    if (receiver.presenceStatus === "ONLINE") {
       const messageToSend = formatResponse(
         messageBody,
         "received",
@@ -73,10 +86,6 @@ exports.handler = async (event, context, callback) => {
         messageToSend,
         apigatewaymanagementapi
       );
-    }
-    if (!receiver) {
-      // update the count of unread message in chat for receiver
-      
     }
 
     callback(null, {

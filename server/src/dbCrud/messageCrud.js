@@ -15,7 +15,7 @@ export const getUserDetails = async (userId) => {
     };
     console.log("Table params for fetching user details :: %j", TableParams);
     const data = await dbClient.query(TableParams);
-    console.log("data from query %j", data);
+    console.log("data from crud user details %j", data);
     return data.Items[0];
   } catch (error) {
     console.error("error when fetching user details %j", error);
@@ -75,7 +75,7 @@ export const messageEntry = async (msg) => {
       sk: `MSG#${msg?.id}`,
       sk1: msg?.createdAt,
       sk2: msg.msgStatus,
-      gsi1Pk: `CHT#${msg?.chatId}`,
+      gsi1Pk: `USR#${msg.receiver.userId}`,
       gsi1Sk: msg?.createdAt,
       sender: msg?.sender,
       receiver: msg?.receiver,
@@ -129,31 +129,30 @@ export const updateMessageStatus = async (chatId, messageId, status) => {
   }
 };
 
-export const updateUnreadMessage = async (owner,otherUser) => {
-    const TableParam = {
-      TableName,
-      Key: { pk: `USR#${owner.userId}`, sk: `USR#${otherUser.userId}` },
-      UpdateExpression:
-        "set #gsi1Sk = :gsi1Sk, #msgStatus = :msgStatus, #updatedAt = :updatedAt, #sk2 = :sk2",
-      ExpressionAttributeNames: {
-        "#msgStatus": "msgStatus",
-        "#gsi1Sk": "gsi1Sk",
-        "#updatedAt": "updatedAt",
-        "#sk2": "sk2",
-      },
-      ExpressionAttributeValues: {
-        ":gsi1Sk": Date.now().toString(),
-        ":msgStatus": status,
-        ":sk2": status,
-        ":updatedAt": Date.now().toString(),
-      },
-    };
-    try {
-      await dbClient.updateItem(TableParam);
-      console.log("success in updateMessageStatus");
-    } catch (error) {
-      console.log("error in updateMessageStatus %j", error);
-      return error;
-    }
+export const updateUnreadMessage = async (owner, otherUser, count) => {
+  const TableParam = {
+    TableName,
+    Key: { pk: `USR#${owner.userId}`, sk: `USR#${otherUser.userId}` },
+    UpdateExpression:
+      "set #gsi1Sk = :gsi1Sk, #sk1 = :sk1, #updatedAt = :updatedAt, #unreadCount = :unreadCount",
+    ExpressionAttributeNames: {
+      "#sk1": "sk1",
+      "#gsi1Sk": "gsi1Sk",
+      "#updatedAt": "updatedAt",
+      "#unreadCount": "unreadCount",
+    },
+    ExpressionAttributeValues: {
+      ":gsi1Sk": Date.now().toString(),
+      ":sk1": Date.now().toString(),
+      ":unreadCount": count,
+      ":updatedAt": Date.now().toString(),
+    },
   };
-
+  try {
+    await dbClient.updateItem(TableParam);
+    console.log("success in updateMessageStatus");
+  } catch (error) {
+    console.log("error in updateMessageStatus %j", error);
+    return error;
+  }
+};

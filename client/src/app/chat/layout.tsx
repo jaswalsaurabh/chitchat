@@ -7,10 +7,8 @@ import Notification from "../../assets/notify.svg";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addEventsData, updateCallState } from "@/store/callSlice";
 import socketConnection from "../_lib/socket";
-import { usePeerHook } from "@/hooks/usePeerConnection";
-import { Lexend_Tera } from "next/font/google";
+import { fetchChatList } from "@/store/chatSlice";
 
 export default function RootLayout({
   children,
@@ -30,169 +28,12 @@ export default function RootLayout({
   const dispatch = useDispatch();
   const toRef = useRef<string>("");
   const callSlice = useSelector((state: any) => state.CallSlice);
-  let [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(
-    null
-  );
 
-  const {
-    // peer: peerConnection,
-    // saveAnswerSendCandidate,
-    saveOfferSendAnswer,
-  } = usePeerHook();
-
-  console.log("this is callSlice>>", callSlice);
-
-  const createNewPeerConnection = () => {
-    console.log("created peer");
-    let connection = new RTCPeerConnection();
-    setPeerConnection(connection);
-    return connection;
-  };
-
-  const getMedia = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        // audio: true,
-      });
-      setLocalStream(stream);
-      createNewPeerConnection();
-      // Display local video
-      if (localVideoRef.current && !localVideoRef.current.srcObject) {
-        localVideoRef.current.srcObject = stream;
-      }
-      // Add tracks to the peer connection
-      // if (stream && peerConnection) {
-      //   stream
-      //     .getTracks()
-      //     .forEach((track) => peerConnection.addTrack(track, stream));
-      // }
-    } catch (error) {
-      console.error("Error accessing media devices:", error);
-    }
-  };
-
-  console.log("layout peer", peerConnection);
-
-  const createOffer = async () => {
-    try {
-      if (peerConnection) {
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        // Send the offer to the other peer (via signaling server or your chosen method)
-        socketConnection.emit("offer", {
-          payload: offer,
-          to: callSlice.callObj,
-        });
-      }
-    } catch (error) {
-      console.error("Error creating offer:", error);
-    }
-  };
-
-  const receiveOffer = async (offer: any) => {
-    console.log("in receiveOffer", peerConnection);
-
-    try {
-      if (peerConnection) {
-        await peerConnection.setRemoteDescription(
-          new RTCSessionDescription(offer)
-        );
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        // Send the answer to the other peer (via signaling server or your chosen method)
-        socketConnection.emit("answer", {
-          payload: answer,
-          to: callSlice.callObj,
-        });
-      }
-    } catch (error) {
-      console.error("Error receiving offer:", error);
-    }
-  };
-
-  const sendStream = async () => {
-    console.log("send stream 123 ");
-
-    if (localStream) {
-      const tracks = localStream?.getTracks();
-      for (const track of tracks) {
-        console.log("stream is sent bro");
-
-        peerConnection?.addTrack(track);
-      }
-    }
-  };
-
-  const receiveAnswer = async (answer: any) => {
-    console.log("here answer");
-
-    try {
-      if (peerConnection) {
-        await peerConnection.setRemoteDescription(
-          new RTCSessionDescription(answer)
-        );
-        await sendStream();
-      }
-    } catch (error) {
-      console.error("Error receiving answer:", error);
-    }
-  };
-
-  const handleReceivedIceCandidate = (receivedIceCandidate: any) => {
-    // Add the received ICE candidate to the peer connection
-
-    console.log("ice added", receivedIceCandidate);
-    if (peerConnection) {
-      console.log("in que");
-
-      peerConnection
-        .addIceCandidate(new RTCIceCandidate(receivedIceCandidate.payload))
-        .catch((error) => {
-          console.error("Error adding ICE candidate:", error);
-        });
-    }
-  };
-
-
-  const handleIncoming = () => {
-    dispatch(addEventsData({ payload: true, key: "incoming" }));
-    getMedia();
-    createOffer();
-  };
 
   useEffect(() => {
-    socketConnection.on("offer", receiveOffer);
-    socketConnection.on("call", handleIncoming);
-    socketConnection.on("answer", receiveAnswer);
-    socketConnection.on("onicecandidate", handleReceivedIceCandidate);
+    // socketConnection.on("offer", receiveOffer);
+    // dispatch(fetchChatList())
   }, []);
-
-  useEffect(() => {
-    if (callSlice.isCalling) {
-      getMedia();
-    }
-    if (callSlice.answered) {
-      getMedia();
-      createOffer();
-    }
-  }, [callSlice]);
-
-  const handleEndCall = () => {
-    if (localVideoRef.current) {
-      const tracks = localStream?.getTracks();
-      tracks?.forEach((track) => track.stop());
-
-      localVideoRef.current.srcObject = null;
-      dispatch(
-        updateCallState({
-          isCalling: false,
-          callScreen: false,
-          answered: false,
-        })
-      );
-    }
-  };
 
   if (!callSlice.callScreen) {
     return (
@@ -318,7 +159,7 @@ export default function RootLayout({
             <h1>More</h1>
           </div>
           <div
-            onClick={handleEndCall}
+            // onClick={handleEndCall}
             className="flex bg-red-700 cursor-pointer h-[40%] p-4 items-center rounded"
           >
             End Call

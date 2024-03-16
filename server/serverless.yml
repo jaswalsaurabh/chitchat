@@ -159,10 +159,10 @@ resources:
             Projection:
               ProjectionType: ALL
               
-    LambdaExecutionRole:
+    LambdaExecutionRole2:
       Type: "AWS::IAM::Role"
       Properties:
-        RoleName: LambdaExecutionRole
+        RoleName: LambdaExecutionRole2
         AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -213,35 +213,35 @@ functions:
           route: keepAlive
 # APIs
   listUsers:
-    handler: src/handlers/api/listUsers.handler
+    handler: src/services/api/listUsers.handler
     events:
       - httpApi:
           path: /listUsers
           method: get
           cors: true
   getChatList:
-    handler: src/handlers/api/getChatList.handler
+    handler: src/services/api/getChatList.handler
     events:
       - httpApi:
           path: /get-chat-list
           method: post
           cors: true
   getChatHistory:
-    handler: src/handlers/api/getChatHistory.handler
+    handler: src/services/api/getChatHistory.handler
     events:
       - httpApi:
           path: /get-chat-history
           method: post
           cors: true
   sendRequest:
-    handler: src/handlers/api/sendRequest.handler
+    handler: src/services/api/sendRequest.handler
     events:
       - httpApi:
           path: /send-request
           method: post
           cors: true
   fetchRequests:
-    handler: src/handlers/api/fetchRequests.handler
+    handler: src/services/api/fetchRequests.handler
     events:
       - httpApi:
           path: /fetch-requests

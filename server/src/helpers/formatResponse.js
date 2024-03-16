@@ -48,12 +48,7 @@ export const formatResponse = (data, route, message, error) => {
   }
 };
 
-
-export const formatAPIPaginationData = (
-  data,
-  message,
-  error
-) => {
+export const formatAPIPaginationData = (data, message, error) => {
   try {
     const response = {
       data: [],
@@ -64,7 +59,6 @@ export const formatAPIPaginationData = (
     return {
       ...response,
       data,
-      lastEvaluatedKey,
       message: message || "",
       error: error || false,
     };
@@ -74,11 +68,7 @@ export const formatAPIPaginationData = (
   }
 };
 
-export const formatAPIData = (
-  data,
-  message,
-  error
-) => {
+export const formatAPIData = (data, message, error) => {
   try {
     const response = {
       data: [],

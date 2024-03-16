@@ -22,8 +22,6 @@ function SocketProvider({
   const pathname = usePathname();
 
   useEffect(() => {
-    console.log("hello Buddy");
-
     if (!socketConnection.getSocket() || !socket) {
       const currentAuthenticatedUser = async () => {
         try {
@@ -32,7 +30,6 @@ function SocketProvider({
 
           if (currentUser) {
             router.push("/chat");
-            // `${process.env.REACT_APP_SOCKET_URL}?user=${response.accessToken.jwtToken}`
             // `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
             // let newSocket = socketConnection.connect("ws://localhost:8080");
             let newSocket = socketConnection.connect(`${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`);
