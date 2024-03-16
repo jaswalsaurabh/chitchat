@@ -185,6 +185,7 @@ resources:
 
 
 functions:
+#  WSS Events:
   connect:
     handler: src/services/websockets/connect.handler
     events:
@@ -200,8 +201,49 @@ functions:
     events:
       - websocket:
           route: message
+  acknowledge:
+    handler: src/services/websockets/acknowledge.handler
+    events:
+      - websocket:
+          route: acknowledge
   keepAlive:
     handler: src/services/websockets/keepAlive.handler
     events:
       - websocket:
           route: keepAlive
+# APIs
+  listUsers:
+    handler: src/handlers/api/listUsers.handler
+    events:
+      - httpApi:
+          path: /listUsers
+          method: get
+          cors: true
+  getChatList:
+    handler: src/handlers/api/getChatList.handler
+    events:
+      - httpApi:
+          path: /get-chat-list
+          method: post
+          cors: true
+  getChatHistory:
+    handler: src/handlers/api/getChatHistory.handler
+    events:
+      - httpApi:
+          path: /get-chat-history
+          method: post
+          cors: true
+  sendRequest:
+    handler: src/handlers/api/sendRequest.handler
+    events:
+      - httpApi:
+          path: /send-request
+          method: post
+          cors: true
+  fetchRequests:
+    handler: src/handlers/api/fetchRequests.handler
+    events:
+      - httpApi:
+          path: /fetch-requests
+          method: post
+          cors: true

@@ -26,8 +26,6 @@ export const presenceEntry = async (user) => {
           sk2: USER_PRESENCE_STATUS.ONLINE,
           sk3: `CONN#${user.connectionId}`,
           sk4: `UTYP#${user.userType}`,
-          gsi1Pk: `${user.userType}#${USER_PRESENCE_STATUS.ONLINE}`,
-          gsi1Sk: "0",
           userId: user.userId,
           presenceStatus: USER_PRESENCE_STATUS.ONLINE,
           userType: user.userType,
@@ -105,19 +103,44 @@ export const updatePresence = async (user) => {
 };
 
 export const getUserWithConnection = async (CONN_ID) => {
-    const TableParam = {
-      TableName,
-      IndexName: "LSI3",
-      KeyConditionExpression: "pk = :pkey and sk3 = :connId", //and sk <= :timestamp
-      ExpressionAttributeValues: {
-        ":pkey": `USRPR#usr`,
-        ":connId": `CONN#${CONN_ID}`,
-      },
-    };
-    try {
-      const data = await dbClient.query(TableParam);
-      return data;
-    } catch (error) {
-      console.log("error %j >>", error);
-    }
+  const TableParam = {
+    TableName,
+    IndexName: "LSI3",
+    KeyConditionExpression: "pk = :pkey and sk3 = :connId", //and sk <= :timestamp
+    ExpressionAttributeValues: {
+      ":pkey": `USRPR#usr`,
+      ":connId": `CONN#${CONN_ID}`,
+    },
   };
+  try {
+    const data = await dbClient.query(TableParam);
+    return data;
+  } catch (error) {
+    console.log("error %j >>", error);
+  }
+};
+
+export const getAllUsers = async () => {
+  const TableParam = {
+    TableName,
+    KeyConditionExpression: "pk = :pkey",
+    ExpressionAttributeValues: {
+      ":pkey": "USRPR#usr",
+    },
+    ExpressionAttributeNames: {
+      "#userId": "userId",
+      "#userDetails": "userDetails",
+      "#presenceStatus": "presenceStatus",
+      "#createdAt": "createdAt",
+      "#updatedAt": "updatedAt",
+    },
+    ProjectionExpression:
+      "#userDetails, #userId, #presenceStatus, #createdAt, #updatedAt",
+  };
+  try {
+    const data = await dbClient.query(TableParam);
+    return data.Items;
+  } catch (error) {
+    console.log("error in listing all users >> %j", error);
+  }
+};
