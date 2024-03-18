@@ -9,16 +9,16 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import socketConnection from "../_lib/socket";
 import { fetchChatList } from "@/store/chatSlice";
+import { ReduxState } from "@/store/store";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const length = 15;
-  const filledArray = Array.from({ length }, (_, index) => index + 1);
   const pathname = usePathname();
   const pathLength = pathname.split("/");
+  const reduxState = useSelector((state: ReduxState) => state);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   // local
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -27,21 +27,31 @@ export default function RootLayout({
 
   const dispatch = useDispatch();
   const toRef = useRef<string>("");
-  const callSlice = useSelector((state: any) => state.CallSlice);
-
 
   useEffect(() => {
     // socketConnection.on("offer", receiveOffer);
-    // dispatch(fetchChatList())
+    const userId = reduxState.AuthSlice.authObj?.sub;
+    if (userId) {
+      dispatch(fetchChatList(userId));
+    }
   }, []);
+
+  const callSlice = reduxState.CallSlice;
+
+  const chatList = reduxState.ChatSlice.chatList.data;
+
+  // console.log("chatList: ", chatList);
 
   if (!callSlice.callScreen) {
     return (
       <div className="flex flex-col">
         <div className="flex h-[8vh] min-h-[63px] sticky top-0">
           <div className="flex w-full items-center justify-between">
-            <div className="flex">
+            <div className="flex items-center lg:w-[26%] justify-between">
               <h1 className="ml-4 text-2xl font-sans">Messages</h1>
+              <div className="flex items-center border rounded cursor-pointer ml-4 py-1 px-2">
+                Add People
+              </div>
             </div>
             <div className="flex">
               {/* <div className="flex mr-2 border-2 border-solid border-slate-500 rounded-md">
@@ -73,9 +83,10 @@ export default function RootLayout({
             </div>
           </div>
         </div>
-        <div className="flex h-[92vh] w-full">
+        <div className="flex h-[92vh] w-full relative">
+          {/* sideBar */}
           <div
-            className={`flex flex-col border border-slate-50 w-full ${
+            className={`flex flex-col border relative border-slate-50 w-full ${
               pathLength.length == 3 && "hidden lg:flex"
             } lg:w-[26%]`}
           >
@@ -87,11 +98,12 @@ export default function RootLayout({
               />
             </div>
             <div className="flex flex-col overflow-y-scroll">
-              {filledArray.map((item) => (
-                <ChatInfo key={item} item={item} />
+              {chatList?.map((item, index) => (
+                <ChatInfo key={item.chatId} item={item} index={index} />
               ))}
             </div>
           </div>
+
           <div className={`lg:flex w-full h-full hidde`}>{children}</div>
         </div>
       </div>

@@ -41,11 +41,8 @@ export default function Page() {
           },
         },
       };
-      // console.log("signup Params", signupParams);
-
       try {
-        let registerUser = await signUp(signupParams);
-
+        await signUp(signupParams);
         setActive({ success: false, register: false, confirmation: true });
         // console.log("this is register User", registerUser);
       } catch (error) {
@@ -57,7 +54,6 @@ export default function Page() {
           username: userData.name,
           confirmationCode: userData.otp,
         });
-        console.log("confirm resp", confirmResp);
         setActive({ success: true, register: false, confirmation: false });
       } catch (error) {
         console.log("error confirming sign up", error);

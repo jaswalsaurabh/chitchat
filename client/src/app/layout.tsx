@@ -19,9 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Suspense fallback={<LoadingUI />}>
-          <SocketProvider>
-            <Provider store={store}>{children}</Provider>
-          </SocketProvider>
+          <Provider store={store}>
+            <SocketProvider>{children}</SocketProvider>
+          </Provider>
         </Suspense>
       </body>
     </html>

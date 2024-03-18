@@ -50,7 +50,6 @@ export const updatePresence = async (user) => {
     userId,
     status,
     connectionId = null,
-    userType,
     userDetails = null,
     user: cognitoDetails = null,
   } = user;
@@ -61,16 +60,13 @@ export const updatePresence = async (user) => {
     TableName,
     Key: { pk: "USRPR#usr", sk: `USR#${userId}` },
     UpdateExpression:
-      "set #status = :status, #updatedAt = :updatedAt, #sk3 = :sk3, #sk4 = :sk4, #gsi1Pk = :gsi1Pk, #state = :state, #connectionId = :connectionId, #userType = :userType",
+      "set #status = :status, #updatedAt = :updatedAt, #sk3 = :sk3, #state = :state, #connectionId = :connectionId",
     ExpressionAttributeNames: {
       "#status": "presenceStatus",
       "#updatedAt": "updatedAt",
       "#state": "sk2",
       "#connectionId": "connectionId",
       "#sk3": "sk3",
-      "#sk4": "sk4",
-      "#gsi1Pk": "gsi1Pk",
-      "#userType": "userType",
     },
     ExpressionAttributeValues: {
       ":status": status,
@@ -78,9 +74,6 @@ export const updatePresence = async (user) => {
       ":updatedAt": Date.now().toString(),
       ":connectionId": connectionId,
       ":sk3": `CONN#${connectionId}`,
-      ":sk4": `UTYP#${userType}`,
-      ":gsi1Pk": `${userType}#${status}`,
-      ":userType": userType,
     },
   };
 

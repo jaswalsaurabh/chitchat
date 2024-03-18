@@ -1,7 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import callSlice from "./callSlice";
-import chatSlice from "./chatSlice";
-import authSlice from "./authSlice";
+import callSlice, { CallState } from "./callSlice";
+import chatSlice, { ChatState } from "./chatSlice";
+import authSlice, { AuthState } from "./authSlice";
+
+
+export interface ReduxState {
+  CallSlice: CallState,
+  ChatSlice: ChatState,
+  AuthSlice: AuthState
+}
 
 const store = configureStore({
   reducer: {

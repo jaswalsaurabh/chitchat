@@ -8,6 +8,7 @@ export default function Page({ params }: { params: { id: string } }) {
     userInfo: false,
     search: false,
   });
+  
   function handleUserInfo() {
     setHistoryProps({ ...historyProps, userInfo: true });
   }

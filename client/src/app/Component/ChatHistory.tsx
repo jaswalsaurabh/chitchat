@@ -2,16 +2,21 @@
 import React from "react";
 import ChatInput from "./ChatInput";
 import Message from "./Message";
+import { useSelector } from "react-redux";
+import { ReduxState } from "@/store/store";
+import chatSlice from "@/store/chatSlice";
 
 function ChatHistory({ parentWidth }: { parentWidth: number | null }) {
   const width = parentWidth;
-  let widthStyle = width?.toFixed(0) + "px";
   // console.log("width histo", widthStyle);
+  const ChatSlice = useSelector((state: ReduxState) => state.ChatSlice);
+  console.log("reduxState", ChatSlice);
+
   return (
     <div className="flex items-center flex-col h-full w-full overflow-y-hidden">
-      <Message />
+      <Message chatState={ChatSlice} />
       <div className="w-full absolute">
-        <ChatInput parentWidth={parentWidth} />
+        <ChatInput parentWidth={parentWidth} chatState={ChatSlice} />
       </div>
     </div>
   );

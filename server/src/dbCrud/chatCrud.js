@@ -10,7 +10,6 @@ export const getChatHistory = async (chatId) => {
     ExpressionAttributeValues: {
       ":pkey": `CHT#${chatId}`,
     },
-    Limit: 30,
   };
   try {
     const data = await dbClient.query(TableParam);

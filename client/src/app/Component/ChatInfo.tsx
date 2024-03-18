@@ -3,19 +3,33 @@ import Image from "next/image";
 import UserImage from "../../assets/user.svg";
 import React from "react";
 import { useRouter } from "next/navigation";
+import {
+  ChatEntry,
+  fetchChatHistory,
+  updateChatDetails,
+  updateState,
+} from "@/store/chatSlice";
+import { useDispatch } from "react-redux";
 
-function ChatInfo({ item }: { item: number }) {
+function ChatInfo({ item, index }: { item: ChatEntry; index: number }) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const handleClick = () => {
-    // Your onClick handler logic
-    // console.log('item>>',item);
-
-    router.push("/chat/123" + item);
+    // dispatch(updateState({ key: "receiver", value: item.chatDetail }));
+    dispatch(
+      updateChatDetails({
+        receiver: item.chatDetail,
+        currChatId: item.chatId,
+        chatType: item.chatType,
+      })
+    );
+    dispatch(fetchChatHistory(item.chatId));
+    router.push("/chat/123" + item.chatId);
   };
   return (
     <div
       className={`flex items-center cursor-pointer w-full h-auto bg-white p-2 ${
-        item == 1 ? "border-none" : "border-t border-slate-200"
+        index == 0 ? "border-none" : "border-t border-slate-200"
       } hover:bg-slate-100`}
       onClick={handleClick}
     >
@@ -29,11 +43,11 @@ function ChatInfo({ item }: { item: number }) {
         />
       </div>
       <div className="flex flex-col w-60">
-        <p className="font-semibold">Saurabh Jaswal</p>
+        <p className="font-semibold">{item.chatDetail.name}</p>
         <p>How are you bro?</p>
       </div>
-      <div className="flex w-20">
-        <p>3 min</p>
+      <div className="flex w-20 text-sm">
+        <p>{new Date(Number(item.updatedAt) * 1000).toLocaleTimeString()}</p>
       </div>
     </div>
   );

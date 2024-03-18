@@ -7,10 +7,15 @@ import Image from "next/image";
 import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
 import SocketProvider from "@/context/socketProvider";
 import socketConnection from "../_lib/socket";
+import { ChatState } from "@/store/chatSlice";
 
-function ChatInput({ parentWidth }: { parentWidth: number | null }) {
-  const width = parentWidth;
-  let widthStyle = width + "px";
+function ChatInput({
+  parentWidth,
+  chatState,
+}: {
+  parentWidth: number | null;
+  chatState: ChatState;
+}) {
   // console.log("width input", widthStyle);
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -23,11 +28,21 @@ function ChatInput({ parentWidth }: { parentWidth: number | null }) {
     setMessage(val);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter") {
-      console.log("Enter pressed");
+  const messageObj = {
+    sender: chatState.sender,
+    receiver: chatState.receiver,
+    chatType: chatState.chatType,
+    kind: "TEXT",
+    body: message,
+    chatId: chatState.currChatId,
+    route: "message",
+  };
 
-      socketConnection.emit("message", { message });
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && message) {
+      console.log("mesasge obj", messageObj);
+
+      socketConnection.emit("message", { ...messageObj });
     }
   };
 
@@ -47,13 +62,6 @@ function ChatInput({ parentWidth }: { parentWidth: number | null }) {
             />
           </div>
           <div className="flex items-center w-full py-2">
-            {/* <textarea
-            className="p-0 m-0 w-full outline-none border-none"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message.."
-          /> */}
             <textarea
               className="w-full outline-none border-none resize-none"
               onChange={handleChange}

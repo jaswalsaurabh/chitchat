@@ -41,9 +41,7 @@ export default function RootLayout({
     saveAnswerSendCandidate,
     saveOfferSendAnswer,
   } = usePeerHook();
-
-  console.log("this is callSlice>>", callSlice);
-
+  
   // const getStream = async () => {
   //   const stream = await window.navigator.mediaDevices.getUserMedia({
   //     video: true,

@@ -1,5 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
+export interface CallState {
+  callObj: object | null,
+  callScreen: boolean,
+  incoming: boolean,
+  isCalling: boolean,
+  answered: boolean,
+}
+
 const initialState = {
   callObj: null,
   callScreen: false,
