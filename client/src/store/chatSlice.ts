@@ -1,4 +1,4 @@
-import { Dispatch, createSlice } from "@reduxjs/toolkit";
+import { Dispatch, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios'
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -101,7 +101,7 @@ const ChatSLice = createSlice({
         },
         addChatMessage(state, action) {
             const tempHis = { ...state.chatHistory };
-            tempHis.data = [...tempHis.data,action.payload]
+            tempHis.data = [...tempHis.data, action.payload]
             return {
                 ...state,
                 chatHistory: tempHis
@@ -157,8 +157,22 @@ export function fetchChatList(userId: string) {
     }
 }
 
+// export const fetchChatHistory = createAsyncThunk('chatHistory', async (dispatch: Dispatch) => {
+//     axios.post(API_ENDPOINT + '/get-chat-history', { chatId }).then((res) => {
+//         // console.log('char history resp', res.data);
+//         dispatch(updateChatHistory(res.data))
+//         dispatch(updateLoadingState({ key: 'chatHistoryLoading', value: false }))
+//         return res.data;
+//     })
+//         .catch((err) => {
+//             dispatch(updateLoadingState({ key: 'chatHistoryLoading', value: false }))
+//             console.log('err in fetch chat list thunk', err);
+//             return err;
+//         })
+// })
+
 export const fetchChatHistory = (chatId: string) => {
-    return function chatHistoryThunk(dispatch: Dispatch) {
+    return async function chatHistoryThunk(dispatch: Dispatch) {
         dispatch(updateLoadingState({ key: 'chatHistoryLoading', value: true }))
         return axios.post(API_ENDPOINT + '/get-chat-history', { chatId }).then((res) => {
             // console.log('char history resp', res.data);

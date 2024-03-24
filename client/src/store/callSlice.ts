@@ -7,6 +7,7 @@ export interface CallState {
   incoming: boolean,
   isCalling: boolean,
   answered: boolean,
+  callEnded: boolean
 }
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   incoming: false,
   isCalling: false,
   answered: false,
+  callEnded: false
 };
 
 const CallSlice = createSlice({

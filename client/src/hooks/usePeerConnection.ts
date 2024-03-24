@@ -5,30 +5,50 @@ import { useSelector } from "react-redux";
 
 export const usePeerHook = () => {
   let [peerConn, setPeerConn] = useState<RTCPeerConnection | null>(null);
-  //   const peerConn = useRef<RTCPeerConnection | null>(null);
+    const peerC = useRef<RTCPeerConnection | null>(null);
   const [receiver, setReceiver] = useState<string>("");
   const callSlice = useSelector((state: any) => state.CallSlice);
   const toRef = useRef<string>("");
 
-  const createNewPeerConnection = () => {
+  const createPeer = () => {
     console.log("created peer");
-    let connection = new RTCPeerConnection();
+    let connection = new RTCPeerConnection(
+      {
+        iceServers: [
+          {
+            urls: [
+              "stun:stun.l.google.com:19302",
+              "stun:global.stun.twilio.com:3478",
+            ],
+          },
+        ],
+      }
+    );
     setPeerConn(connection);
     return connection;
   };
 
-  const usePeerConnection = () => {
-    const peerConnection = useMemo(() => {
-      console.log("created peer");
-      return new RTCPeerConnection();
-    }, []); // Empty dependency array ensures that the connection is created only once
+  const getOffer = async () => {
+    if (peerConn) {
+      const offer = await peerConn.createOffer();
+      await peerConn.setLocalDescription(offer);
+      return offer;
+    }
+  }
 
-    return peerConnection;
-  };
+  const getAnswer = async (offer: RTCSessionDescriptionInit) => {
+    if (peerConn) {
+      await peerConn.setRemoteDescription(new RTCSessionDescription(offer));
+      const ans = await peerConn.createAnswer();
+      await peerConn.setLocalDescription(ans);
+      return ans;
+    }
+  }
 
-  useEffect(() => {
-    toRef.current = callSlice.callObj;
-  }, [callSlice.callObj]);
+
+  // useEffect(() => {
+  //   toRef.current = callSlice.callObj;
+  // }, [callSlice.callObj]);
 
   const saveRecipient = (arg: string) => {
     setReceiver(arg);
@@ -48,64 +68,6 @@ export const usePeerHook = () => {
             const answer = await peerConn.createAnswer();
             peerConn.setLocalDescription(answer);
             socketConnection.emit("answer", { payload: answer, to: toRef });
-            // peerConn.createAnswer(
-            //   (answer) => {
-            //     peerConn?.setLocalDescription(
-            //       new RTCSessionDescription(answer)
-            //     );
-            //     socketConnection.emit("call", {
-            //       call: [
-            //         {
-            //           sender: data.sender,
-            //           receiver: data.receiver,
-            //           kind: "CALL_ANSWER",
-            //           callBody: answer,
-            //           chatId: data.chatId,
-            //           callId: data.callId,
-            //           callType: data.callType,
-            //           sessionId: data.sessionId,
-            //           callerId: data.callerId,
-            //           status: "CONNECTED",
-            //           msgStatus: "CONNECTED",
-            //         },
-            //       ],
-            //     });
-            //     if (data.localCandidates.length) {
-            //       data.localCandidates.map(
-            //         ({ val, i }: { val: any; i: any }) => {
-            //           socketConnection.emit("call", {
-            //             call: [
-            //               {
-            //                 sender: data.sender,
-            //                 receiver: data.receiver,
-            //                 kind: "CANDIDATE",
-            //                 callBody: val,
-            //                 chatId: data.chatId,
-            //                 callId: data.callId,
-            //                 callType: data.callType,
-            //                 sessionId: data.sessionId,
-            //                 status:
-            //                   i === data.localCandidates.length - 1
-            //                     ? "CONNECTED"
-            //                     : "CONNECTING",
-            //                 msgStatus:
-            //                   i === data.localCandidates.length - 1
-            //                     ? "CONNECTED"
-            //                     : "CONNECTING",
-            //               },
-            //             ],
-            //           });
-            //         }
-            //       );
-            //     }
-            //   },
-            //   (error) => {
-            //     console.error(
-            //       "Something went wrong when creating answer !!",
-            //       error
-            //     );
-            //   }
-            // );
           }
         }
       } catch (error) {
@@ -157,6 +119,7 @@ export const usePeerHook = () => {
     [peerConn]
   );
 
+
   const closePeerConnection = () => {
     if (peerConn) {
       peerConn.close();
@@ -167,7 +130,7 @@ export const usePeerHook = () => {
 
   useEffect(() => {
     if (!peerConn) {
-      createNewPeerConnection();
+      createPeer();
     }
 
     return () => {
@@ -180,6 +143,9 @@ export const usePeerHook = () => {
   return {
     peer: peerConn,
     receiver,
+    getOffer,
+    createPeer,
+    getAnswer,
     saveRecipient,
     closePeerConnection,
     saveOfferSendAnswer,

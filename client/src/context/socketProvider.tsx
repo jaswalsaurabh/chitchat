@@ -39,15 +39,17 @@ function SocketProvider({
             email: "",
             profileImage: "",
           };
-          dispatch(updateState({key:'sender',value:sender}))
+          dispatch(updateState({ key: "sender", value: sender }));
           const token = currentUser?.accessToken.toString();
           if (currentUser) {
             router.push("/chat");
             // `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
-            // let newSocket = socketConnection.connect("ws://localhost:8080");
             let newSocket = socketConnection.connect(
-              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
+              "ws://localhost:8080?" + `token=${sender.username}`
             );
+            // let newSocket = socketConnection.connect(
+            //   `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
+            // );
             setSocket(newSocket);
           } else {
             router.push("/login");

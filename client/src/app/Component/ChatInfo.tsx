@@ -7,7 +7,6 @@ import {
   ChatEntry,
   fetchChatHistory,
   updateChatDetails,
-  updateState,
 } from "@/store/chatSlice";
 import { useDispatch } from "react-redux";
 
@@ -33,7 +32,7 @@ function ChatInfo({ item, index }: { item: ChatEntry; index: number }) {
       } hover:bg-slate-100`}
       onClick={handleClick}
     >
-      <div className="w-20">
+      <div className="w-20 mt-1">
         <Image
           priority
           src={UserImage}

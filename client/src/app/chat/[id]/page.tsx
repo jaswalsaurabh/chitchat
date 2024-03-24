@@ -8,7 +8,7 @@ export default function Page({ params }: { params: { id: string } }) {
     userInfo: false,
     search: false,
   });
-  
+
   function handleUserInfo() {
     setHistoryProps({ ...historyProps, userInfo: true });
   }
@@ -17,6 +17,9 @@ export default function Page({ params }: { params: { id: string } }) {
   }
   return (
     <div className={"flex flex-col w-full bg-amber-200"}>
+      {/* <head>
+        <title>{"Chat With Saurabh"}</title>
+      </head> */}
       <ChatHeader />
     </div>
   );

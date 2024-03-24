@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import UserImage from "../../assets/user.svg";
 import SearchIcon from "../../assets/search.png";
@@ -10,8 +10,8 @@ import CloseIcon from "../../assets/close.svg";
 import UserInfo from "@/app/Component/UserInfo";
 import ChatHistory from "./ChatHistory";
 import { useDispatch, useSelector } from "react-redux";
-import callSlice, { addEventsData, updateCallState } from "@/store/callSlice";
-import { usePeerHook } from "@/hooks/usePeerConnection";
+import { addEventsData, updateCallState } from "@/store/callSlice";
+
 import socketConnection from "../_lib/socket";
 
 function ChatHeader() {
@@ -23,7 +23,7 @@ function ChatHeader() {
   const [parentWidth, setParentWidth] = useState<number | null>(null);
   const [value, setValue] = useState<string>("");
   const callSlice = useSelector((state: any) => state.CallSlice);
-  const { saveRecipient } = usePeerHook();
+  const ChatSlice = useSelector((state: any) => state.ChatSlice);
   const dispatch = useDispatch();
 
   function handleUserInfo() {
@@ -47,20 +47,27 @@ function ChatHeader() {
   }, []);
 
   const handleInitiateCall = async () => {
-    socketConnection.emit("call", { to: value });
+    // socketConnection.emit("incomming:call", { to: ChatSlice?.receiver.name });
     dispatch(
       updateCallState({ isCalling: true, callScreen: true, callObj: value })
     );
   };
 
-  const answerCall = async () => {
+  const answerCall = useCallback(async () => {
     dispatch(
       updateCallState({ callScreen: true, callObj: value, answered: true })
     );
     // dispatch(
     //   addEventsData({ payload: true, callScreen: true, key: "answered" })
     // );
-  };
+  }, []);
+
+  // useEffect(() => {
+  //   socketConnection.on("incomming:call", answerCall);
+  //   return () => {
+  //     socketConnection.on("incomming:call", answerCall);
+  //   };
+  // }, [answerCall]);
 
   return (
     <div className="flex flex-row w-full">
@@ -127,7 +134,7 @@ function ChatHeader() {
                   value={value}
                   onChange={(e) => {
                     setValue(e.target.value);
-                    saveRecipient(e.target.value);
+                    dispatch(updateCallState({ callObj: e.target.value }));
                   }}
                 />
               </div>

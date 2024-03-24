@@ -21,12 +21,12 @@ class SocketConnection {
     });
 
     this.socket.addEventListener("message", (event) => {
-      const message = JSON.parse(event.data);
+      // console.log('event data ', event.data);
+
+      const message = event.data == 'connection established' ? event.data : JSON.parse(event.data);
       const { route: eventName, ...data } = message;
       console.log("this is data from socket server", message);
-
       // Assuming store is declared and available in the scope
-
       let state = store.getState();
       if (this.eventHandlers[eventName]) {
         this.eventHandlers[eventName].forEach((handler) =>
