@@ -98,7 +98,7 @@ function ChatHeader() {
             <div className="flex items-center">
               <div
                 onClick={callSlice.incoming ? answerCall : handleInitiateCall}
-                className="relative text-xl cursor-pointer p-2 rounded"
+                className="text-xl cursor-pointer p-2 rounded"
               >
                 <Image
                   priority
@@ -110,7 +110,7 @@ function ChatHeader() {
               </div>
               <div
                 onClick={handleInitiateCall}
-                className="relative text-xl cursor-pointer p-2 rounded"
+                className=" text-xl cursor-pointer p-2 rounded"
               >
                 <Image
                   priority
@@ -120,7 +120,7 @@ function ChatHeader() {
                   alt="user-avatar"
                 />
               </div>
-              <div className="relative text-xl cursor-pointer p-2 rounded">
+              <div className=" text-xl cursor-pointer p-2 rounded">
                 {/* <Image
                   priority
                   src={SearchIcon}
@@ -138,7 +138,7 @@ function ChatHeader() {
                   }}
                 /> */}
               </div>
-              <div className="relative ml-1 text-xl cursor-pointer p-2">
+              <div className="ml-1 text-xl cursor-pointer p-2">
                 <Image
                   priority
                   src={MenuIcon}

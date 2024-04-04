@@ -296,13 +296,6 @@ export default function RootLayout({
                 />
               </div>
               <div className="flex mt-2 mx-2 cursor-pointer">
-                <Image
-                  priority
-                  src={UserImage}
-                  height={50}
-                  width={50}
-                  alt="user-avatar"
-                />
                 <DropdownComponent />
               </div>
             </div>
@@ -315,13 +308,13 @@ export default function RootLayout({
               pathLength.length == 3 && "hidden lg:flex"
             } lg:w-[26%] lg:min-w-[26%]`}
           >
-            <div className="p-3 sticky border-y bg-white top-0">
+            {/* <div className="p-3 sticky border-y bg-white top-0">
               <input
                 type="text"
                 placeholder="Search..."
                 className="p-2 pl-4 w-[100%] outline-none text-sm bg-slate-100 border border-solid rounded-full"
               />
-            </div>
+            </div> */}
             {/* Here make ternary condition for showinf user List */}
             {RequestSlice.showUserList ? (
               <div className="flex flex-col overflow-y-scroll w-full">

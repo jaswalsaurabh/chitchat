@@ -11,7 +11,6 @@
   "dependencies": {
     "@aws-amplify/auth": "^6.0.18",
     "@headlessui/react": "^1.7.18",
-    "@heroicons/react": "^2.1.1",
     "@netlify/plugin-nextjs": "^4.41.3",
     "@reduxjs/toolkit": "^2.2.1",
     "aws-amplify": "^6.0.18",
