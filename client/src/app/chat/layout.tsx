@@ -14,6 +14,7 @@ import { AppDispatch, ReduxState } from "@/store/store";
 import { UserEntry, fetchUserList, updateState } from "@/store/requestSlice";
 import { updateCallState } from "@/store/callSlice";
 import { usePeerHook } from "@/hooks/usePeerConnection";
+import DropdownComponent from "../Component/Modal";
 
 export default function RootLayout({
   children,
@@ -275,6 +276,7 @@ export default function RootLayout({
               >
                 Add People
               </div>
+              <DropdownComponent />
             </div>
             <div className="flex">
               {/* <div className="flex mr-2 border-2 border-solid border-slate-500 rounded-md">
@@ -301,14 +303,15 @@ export default function RootLayout({
                   width={50}
                   alt="user-avatar"
                 />
+                <DropdownComponent />
               </div>
             </div>
           </div>
         </div>
-        <div className="flex h-[92vh] w-full relative">
+        <div className="flex h-[92vh] w-full">
           {/* sideBar */}
           <div
-            className={`flex flex-col border relative border-slate-50 w-full ${
+            className={`flex flex-col border border-slate-50 w-full ${
               pathLength.length == 3 && "hidden lg:flex"
             } lg:w-[26%] lg:min-w-[26%]`}
           >
@@ -360,7 +363,7 @@ export default function RootLayout({
             )}
           </div>
 
-          <div className={`lg:flex w-full h-full z-10 hidden`}>{children}</div>
+          <div className={`lg:flex w-full h-full hidden`}>{children}</div>
         </div>
       </div>
     );

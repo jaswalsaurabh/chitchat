@@ -128,7 +128,7 @@ function ChatHeader() {
                   width={20}
                   alt="user-avatar"
                 /> */}
-                <input
+                {/* <input
                   type="text"
                   placeholder="1"
                   value={value}
@@ -136,7 +136,7 @@ function ChatHeader() {
                     setValue(e.target.value);
                     dispatch(updateCallState({ callObj: e.target.value }));
                   }}
-                />
+                /> */}
               </div>
               <div className="relative ml-1 text-xl cursor-pointer p-2">
                 <Image
