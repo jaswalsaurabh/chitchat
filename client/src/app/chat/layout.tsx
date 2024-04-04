@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import socketConnection from "../_lib/socket";
 import { fetchChatList } from "@/store/chatSlice";
-import store, { ReduxState } from "@/store/store";
+import { AppDispatch, ReduxState } from "@/store/store";
 import { UserEntry, fetchUserList, updateState } from "@/store/requestSlice";
 import { updateCallState } from "@/store/callSlice";
 import { usePeerHook } from "@/hooks/usePeerConnection";
@@ -41,7 +41,7 @@ export default function RootLayout({
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const initiateCall = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -301,7 +301,6 @@ export default function RootLayout({
                   width={50}
                   alt="user-avatar"
                 />
-                {/* <Modal/> */}
               </div>
             </div>
           </div>
@@ -361,7 +360,7 @@ export default function RootLayout({
             )}
           </div>
 
-          <div className={`lg:flex w-full h-full hidde`}>{children}</div>
+          <div className={`lg:flex w-full h-full z-10 hidden`}>{children}</div>
         </div>
       </div>
     );

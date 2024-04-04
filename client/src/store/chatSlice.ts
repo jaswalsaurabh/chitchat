@@ -140,6 +140,8 @@ export const { updateChatHistory, updateChatDetails, addChatMessage, updateState
 
 export default ChatSLice.reducer;
 
+
+
 export function fetchChatList(userId: string) {
     return function chatListThunk(dispatch: Dispatch) {
         dispatch(updateLoadingState({ key: 'chatListLoading', value: true }))
@@ -157,19 +159,6 @@ export function fetchChatList(userId: string) {
     }
 }
 
-// export const fetchChatHistory = createAsyncThunk('chatHistory', async (dispatch: Dispatch) => {
-//     axios.post(API_ENDPOINT + '/get-chat-history', { chatId }).then((res) => {
-//         // console.log('char history resp', res.data);
-//         dispatch(updateChatHistory(res.data))
-//         dispatch(updateLoadingState({ key: 'chatHistoryLoading', value: false }))
-//         return res.data;
-//     })
-//         .catch((err) => {
-//             dispatch(updateLoadingState({ key: 'chatHistoryLoading', value: false }))
-//             console.log('err in fetch chat list thunk', err);
-//             return err;
-//         })
-// })
 
 export const fetchChatHistory = (chatId: string) => {
     return async function chatHistoryThunk(dispatch: Dispatch) {

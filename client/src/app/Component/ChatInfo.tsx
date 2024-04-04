@@ -9,10 +9,11 @@ import {
   updateChatDetails,
 } from "@/store/chatSlice";
 import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
 
 function ChatInfo({ item, index }: { item: ChatEntry; index: number }) {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const handleClick = () => {
     // dispatch(updateState({ key: "receiver", value: item.chatDetail }));
     dispatch(
