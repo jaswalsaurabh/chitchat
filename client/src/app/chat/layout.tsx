@@ -19,6 +19,7 @@ import { usePeerHook } from "@/hooks/usePeerConnection";
 import DropdownComponent from "../Component/Modal";
 import Tooltip from "../Component/ToolTip";
 import axios from "axios";
+import { CALL_KIND, CALL_MODE, SOCKET_ROUTE } from "../enum";
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export default function RootLayout({
   children,
@@ -62,9 +63,14 @@ export default function RootLayout({
       });
 
       const offer = await getOffer();
-      socketConnection.emit("incomming:call", {
-        to: ChatSlice.receiver?.name,
+      socketConnection.emit(CALL_KIND.INITIATE, {
+        sender: ChatSlice.sender,
+        receiver: ChatSlice.receiver,
         offer,
+        kind: CALL_KIND.INITIATE,
+        chatId: ChatSlice.currChatId,
+        route: SOCKET_ROUTE.CALL,
+        callType: CALL_MODE.AUDIO,
       });
     }
     setLocalStream(stream);

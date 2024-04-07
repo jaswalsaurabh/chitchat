@@ -19,6 +19,7 @@ export const CALL_KIND = {
   DECLINED: "DECLINED",
   CANCELLED: "CANCELLED",
   RECORDING: "RECORDING",
+  CANDIDATE: "CANDIDATE",
   ENDED: "ENDED",
   MUTE: "MUTE",
   UNMUTE: "UNMUTE",
@@ -36,7 +37,17 @@ export const REQUEST_STATUS = {
 
 export const ENTRY_TYPE = {
   CHAT_ENTRY: "CHAT_ENTRY",
+  CALL_ENTRY: "CALL_ENTRY",
   SESSION_ENTRY: "SESSION_ENTRY",
   MESSAGE_ENTRY: "MESSAGE_ENTRY",
   REQUEST_ENTRY: "REQUEST_ENTRY",
+};
+
+export const SOCKET_ROUTE = {
+  CALL: "call",
+  SENT: "sent",
+  MESSAGE: "message",
+  RECEIVED: "received",
+  CALL_INITIATED: "call_initiated",
+  CALL_INITIATED_SUCCESS: "call_initiate_success",
 };

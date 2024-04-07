@@ -4,7 +4,8 @@ import { sendMessageToClient } from "./sendMessage";
 export const callValidator = async (
   callDataObj,
   apigatewaymanagementapi,
-  userConnxnId
+  userConnxnId,
+  callback
 ) => {
   if (!callDataObj.kind) {
     await sendMessageToClient(
@@ -54,20 +55,6 @@ export const callValidator = async (
       {
         data: [],
         message: "Chat Id missing!",
-        error: true,
-        route: "call",
-      },
-      apigatewaymanagementapi
-    );
-    callback(null, {
-      statusCode: 200,
-    });
-  } else if (!callDataObj.sessionId) {
-    await sendMessageToClient(
-      userConnxnId,
-      {
-        data: [],
-        message: "Session Id missing!",
         error: true,
         route: "call",
       },
