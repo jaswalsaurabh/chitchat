@@ -25,3 +25,17 @@ export const CALL_MODE = {
     AUDIO: "AUDIO",
     VIDEO: "VIDEO",
 }
+
+export const MESSAGE = {
+    SEEN: "SEEN",
+    SENT: "SENT",
+    DELIVERED: "DELIVERED",
+}
+
+export const MSG_KIND = {
+    TEXT: "TEXT",
+    DOCUMENT: "DOCUMENT",
+    IMAGE: "IMAGE",
+    AUDIO: "AUDIO",
+    VIDEO: "VIDEO",
+}

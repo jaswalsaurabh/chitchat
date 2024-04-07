@@ -265,6 +265,17 @@ export default function RootLayout({
     }
   }
 
+  const handleAcknowledgement = (data: any) => {
+    // socketConnection.emit("acknowledge", {
+    //   chatId: chatState.currChatId,
+    //   messageId: data.data.id,
+    //   msgStatus: MESSAGE.DELIVERED,
+    // });
+    console.log("this is data acknowledge", data);
+
+    // dispatch(addChatMessage(data.data));
+  };
+
   useEffect(() => {
     // socketConnection.on("user:joined", handleUserJoined);
     socketConnection.on("callended", endCallEvent);
