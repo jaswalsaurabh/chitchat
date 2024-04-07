@@ -16,12 +16,12 @@ export const callEntry = async (params) => {
   const TableParam = {
     TableName,
     Item: {
-      pk: `CLLUSR#${caller}`,
+      pk: `CHT#${chatId}`,
       sk: `CLL#${callId}`,
       id: callId,
       sk1: Date.now().toString(),
       sk2: CALL_KIND.INITIATE,
-      gsi1Pk: `CHT#${chatId}`,
+      gsi1Pk: `CLLUSR#${caller}`,
       gsi1Sk: Date.now().toString(), //updatedAt
       type: ENTRY_TYPE.CALL_ENTRY,
       chatId,

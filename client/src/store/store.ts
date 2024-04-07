@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import callSlice, { CallState } from "./callSlice";
-import chatSlice, { ChatState, fetchChatHistory } from "./chatSlice";
+import chatSlice, { ChatState } from "./chatSlice";
 import authSlice, { AuthState } from "./authSlice";
 import requestSlice, { RequestState } from "./requestSlice";
 

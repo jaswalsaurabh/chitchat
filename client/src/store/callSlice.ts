@@ -1,13 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { User } from "./chatSlice";
+
+interface CallObj {
+  pk: string;
+  sk: string;
+  id: string;
+  sk1: string;
+  sk2: string;
+  gsi1Pk: string;
+  gsi1Sk: string;
+  type: string;
+  chatId: string;
+  sender: User;
+  receiver: User;
+  kind: string;
+  callType: string;
+  status: string;
+  participants: User[];
+  createdAt: string;
+  updatedAt: string;
+  callId: string;
+}
 
 
 export interface CallState {
-  callObj: object | null,
+  callObj: CallObj | null,
   callScreen: boolean,
   incoming: boolean,
   isCalling: boolean,
   answered: boolean,
-  callEnded: boolean
+  callEnded: boolean,
+  mute: boolean,
 }
 
 const initialState = {
