@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import UserImage from "../../assets/user.svg";
-import SearchIcon from "../../assets/search.png";
 import MenuIcon from "../../assets/menu.png";
 import Audio from "../../assets/audio-call.svg";
 import Video from "../../assets/video-call.svg";
@@ -10,9 +9,8 @@ import CloseIcon from "../../assets/close.svg";
 import UserInfo from "@/app/Component/UserInfo";
 import ChatHistory from "./ChatHistory";
 import { useDispatch, useSelector } from "react-redux";
-import { addEventsData, updateCallState } from "@/store/callSlice";
+import { updateCallState } from "@/store/callSlice";
 
-import socketConnection from "../_lib/socket";
 
 function ChatHeader() {
   const [historyProps, setHistoryProps] = useState({

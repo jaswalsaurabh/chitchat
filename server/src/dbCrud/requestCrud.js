@@ -13,6 +13,7 @@ export const requestEntry = async (receiver, sender, id) => {
       gsi1Sk: Date.now().toString(), //updatedAt
       type: ENTRY_TYPE.REQUEST_ENTRY,
       sender,
+      id,
       status: REQUEST_STATUS.SENT,
       receiver,
       createdAt: Date.now().toString(),
@@ -27,21 +28,20 @@ export const requestEntry = async (receiver, sender, id) => {
   }
 };
 
-
 export const getAllRequests = async (userId) => {
-    const TableParam = {
-      TableName,
-      IndexName: "LSI1",
-      KeyConditionExpression: "pk = :pkey",
-      ExpressionAttributeValues: {
-        ":pkey": `RUSR#${userId}`,
-      },
-      Limit: 30,
-    };
-    try {
-      const data = await dbClient.query(TableParam);
-      return data.Items;
-    } catch (error) {
-      console.log("error in fetch requests crud >> %j", error);
-    }
+  const TableParam = {
+    TableName,
+    IndexName: "LSI1",
+    KeyConditionExpression: "pk = :pkey",
+    ExpressionAttributeValues: {
+      ":pkey": `RUSR#${userId}`,
+    },
+    Limit: 30,
   };
+  try {
+    const data = await dbClient.query(TableParam);
+    return data.Items;
+  } catch (error) {
+    console.log("error in fetch requests crud >> %j", error);
+  }
+};

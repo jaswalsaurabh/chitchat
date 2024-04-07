@@ -1,4 +1,4 @@
-import { Dispatch, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Dispatch, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios'
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 

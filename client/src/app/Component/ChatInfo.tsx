@@ -33,7 +33,7 @@ function ChatInfo({ item, index }: { item: ChatEntry; index: number }) {
       } hover:bg-slate-100`}
       onClick={handleClick}
     >
-      <div className="w-20 mt-1">
+      <div className="w-[20%] mt-1">
         <Image
           priority
           src={UserImage}
@@ -42,11 +42,11 @@ function ChatInfo({ item, index }: { item: ChatEntry; index: number }) {
           alt="user-avatar"
         />
       </div>
-      <div className="flex flex-col w-60">
+      <div className="flex flex-col w-[60%]">
         <p className="font-semibold">{item.chatDetail.name}</p>
         <p>How are you bro?</p>
       </div>
-      <div className="flex w-20 text-sm">
+      <div className="flex w-[20%] text-sm">
         <p>{new Date(Number(item.updatedAt) * 1000).toLocaleTimeString()}</p>
       </div>
     </div>

@@ -1,20 +1,25 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import UserImage from "../../assets/user.svg";
 import Image from "next/image";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default function Example({
+  image,
+  options,
+}: {
+  image: any;
+  options: any;
+}) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="flex w-full justify-center">
           <Image
             priority
-            src={UserImage}
+            src={image}
             height={50}
             width={50}
             alt="user-avatar"

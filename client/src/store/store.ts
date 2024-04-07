@@ -1,4 +1,4 @@
-import { Action, Middleware, configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import callSlice, { CallState } from "./callSlice";
 import chatSlice, { ChatState, fetchChatHistory } from "./chatSlice";
 import authSlice, { AuthState } from "./authSlice";

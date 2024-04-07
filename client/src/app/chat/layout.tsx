@@ -3,19 +3,23 @@
 import ChatInfo from "@/app/Component/ChatInfo";
 import Image from "next/image";
 import UserImage from "../../assets/user.svg";
+import AddUser from "../../assets/add-user.svg";
+import Friends from "../../assets/friends.svg";
 import AddPeople from "../../assets/addpeople.svg";
 import Notification from "../../assets/notify.svg";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import socketConnection from "../_lib/socket";
-import { fetchChatList } from "@/store/chatSlice";
+import { User, fetchChatList } from "@/store/chatSlice";
 import { AppDispatch, ReduxState } from "@/store/store";
 import { UserEntry, fetchUserList, updateState } from "@/store/requestSlice";
 import { updateCallState } from "@/store/callSlice";
 import { usePeerHook } from "@/hooks/usePeerConnection";
 import DropdownComponent from "../Component/Modal";
-
+import Tooltip from "../Component/ToolTip";
+import axios from "axios";
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,6 +30,8 @@ export default function RootLayout({
     sdp: string;
   };
   const pathname = usePathname();
+  console.log("this is path", pathname);
+
   const pathLength = pathname.split("/");
   // peerHook
   const { peer, getOffer, getAnswer, closePeerConnection } = usePeerHook();
@@ -184,8 +190,27 @@ export default function RootLayout({
     }
   }, [CallSlice]);
 
-  function handleClick() {
+  function getUserSuggestion() {
     dispatch(fetchUserList());
+  }
+
+  function handleAddUser(receiver: User) {
+    interface body {
+      sender: User | null;
+      receiver: User;
+    }
+    const reqstBody: body = {
+      sender: ChatSlice.sender,
+      receiver,
+    };
+    axios
+      .post(API_ENDPOINT + "/send-request", { ...reqstBody })
+      .then((res) => {
+        console.log("request res", res.data);
+      })
+      .catch((err) => {
+        console.log("err in sending request", err);
+      });
   }
 
   useEffect(() => {
@@ -266,17 +291,40 @@ export default function RootLayout({
       <div className="flex flex-col">
         <div className="flex h-[8vh] min-h-[63px] sticky top-0">
           <div className="flex w-full items-center justify-between">
-            <div className="flex items-center lg:w-[26%] justify-between">
+            <div className="flex items-center lg:w-[26%] h-full border-r">
               <h1 onClick={handleMessage} className="ml-4 text-2xl font-sans">
                 Messages
               </h1>
-              <div
+              <div className="flex w-full h-full justify-end items-center mr-4">
+                <div className="mr-2 cursor-pointer">
+                  <Tooltip content="Friend Requests" position={"left"}>
+                    <Image
+                      priority
+                      src={Friends}
+                      height={20}
+                      width={40}
+                      alt="user-avatar"
+                    />
+                  </Tooltip>
+                </div>
+                <div className="cursor-pointer" onClick={getUserSuggestion}>
+                  <Tooltip content={"Add Friends"} position={"right"}>
+                    <Image
+                      priority
+                      src={AddUser}
+                      height={20}
+                      width={30}
+                      alt="user-avatar"
+                    />
+                  </Tooltip>
+                </div>
+              </div>
+              {/* <div
                 onClick={handleClick}
                 className="flex items-center border rounded cursor-pointer ml-4 py-1 px-2"
               >
                 Add People
-              </div>
-              <DropdownComponent />
+              </div> */}
             </div>
             <div className="flex">
               {/* <div className="flex mr-2 border-2 border-solid border-slate-500 rounded-md">
@@ -296,7 +344,7 @@ export default function RootLayout({
                 />
               </div>
               <div className="flex mt-2 mx-2 cursor-pointer">
-                <DropdownComponent />
+                <DropdownComponent image={UserImage} options={""} />
               </div>
             </div>
           </div>
@@ -308,13 +356,13 @@ export default function RootLayout({
               pathLength.length == 3 && "hidden lg:flex"
             } lg:w-[26%] lg:min-w-[26%]`}
           >
-            {/* <div className="p-3 sticky border-y bg-white top-0">
+            <div className="flex items-center px-3 sticky h-[8vh] min-h-[62px] border-y bg-white top-0">
               <input
                 type="text"
                 placeholder="Search..."
                 className="p-2 pl-4 w-[100%] outline-none text-sm bg-slate-100 border border-solid rounded-full"
               />
-            </div> */}
+            </div>
             {/* Here make ternary condition for showinf user List */}
             {RequestSlice.showUserList ? (
               <div className="flex flex-col overflow-y-scroll w-full">
@@ -335,13 +383,16 @@ export default function RootLayout({
                     <div className="flex flex-1">
                       <p>{user?.userDetails?.name}</p>
                     </div>
-                    <div className="flex justify-end mr-1 pr-1 w-20">
+                    <div
+                      className="flex justify-end mr-1 pr-3 w-20"
+                      onClick={() => handleAddUser(user.userDetails)}
+                    >
                       <Image
                         priority
                         src={AddPeople}
                         height={20}
                         width={25}
-                        alt="user-avatar"
+                        alt="add-user"
                       />
                     </div>
                   </div>
@@ -356,7 +407,13 @@ export default function RootLayout({
             )}
           </div>
 
-          <div className={`lg:flex w-full h-full hidden`}>{children}</div>
+          <div
+            className={`lg:flex w-full h-full ${
+              pathLength.length == 2 && "hidden lg:flex"
+            }`}
+          >
+            {children}
+          </div>
         </div>
       </div>
     );

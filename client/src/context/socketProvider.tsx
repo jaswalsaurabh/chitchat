@@ -44,12 +44,12 @@ function SocketProvider({
           if (currentUser) {
             router.push("/chat");
             // `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
-            let newSocket = socketConnection.connect(
-              "ws://localhost:8080?" + `token=${sender.username}`
-            );
             // let newSocket = socketConnection.connect(
-            //   `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
+            //   "ws://localhost:8080?" + `token=${sender.username}`
             // );
+            let newSocket = socketConnection.connect(
+              `${process.env.NEXT_PUBLIC_WSS_ENDPOINT}?token=${token}`
+            );
             setSocket(newSocket);
           } else {
             router.push("/login");

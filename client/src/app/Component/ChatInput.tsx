@@ -1,16 +1,14 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EmojiIcon from "../../assets/emoji.png";
 import AttachIcon from "../../assets/attach.png";
 import MicIcon from "../../assets/mic.png";
 import Image from "next/image";
-import useAutosizeTextArea from "../../hooks/useAutosizeTextArea";
-import SocketProvider from "@/context/socketProvider";
-import socketConnection from "../_lib/socket";
 import { ChatState } from "@/store/chatSlice";
+import useAutosizeTextArea from "@/hooks/useAutosizeTextArea";
+import socketConnection from "../_lib/socket";
 
 function ChatInput({
-  parentWidth,
   chatState,
 }: {
   parentWidth: number | null;
@@ -33,18 +31,32 @@ function ChatInput({
     receiver: chatState.receiver,
     chatType: chatState.chatType,
     kind: "TEXT",
-    body: message,
+    body: message.trim(),
     chatId: chatState.currChatId,
     route: "message",
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter" && message) {
-      console.log("mesasge obj", messageObj);
-
+    let msg = message.trim();
+    if (event.key === "Enter" && msg) {
       socketConnection.emit("message", { ...messageObj });
     }
+    if (event.shiftKey && event.key === "Enter") {
+      adjustInputHeight();
+    }
   };
+
+  const adjustInputHeight = () => {
+    const input = textAreaRef.current;
+    if (input) {
+      input.style.height = "0px";
+      input.style.height = input.scrollHeight + "px";
+    }
+  };
+
+  useEffect(() => {
+    adjustInputHeight();
+  }, []);
 
   return (
     <div
@@ -69,6 +81,7 @@ function ChatInput({
               placeholder="Type a message.."
               ref={textAreaRef}
               value={message}
+              rows={1}
             />
           </div>
           <div className="flex px-4 w-[9%] justify-center cursor-pointer py-3 rounded-md">

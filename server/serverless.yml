@@ -158,7 +158,7 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
-              
+
     LambdaExecutionRole2:
       Type: "AWS::IAM::Role"
       Properties:
@@ -182,10 +182,8 @@ resources:
                   Resource:
                     - Fn::Sub: arn:aws:s3:::${ChatBucket}/*
 
-
-
 functions:
-#  WSS Events:
+  #  WSS Events:
   connect:
     handler: src/services/websockets/connect.handler
     events:
@@ -201,6 +199,11 @@ functions:
     events:
       - websocket:
           route: message
+  call:
+    handler: src/services/websockets/call.handler
+    events:
+      - websocket:
+          route: call
   acknowledge:
     handler: src/services/websockets/acknowledge.handler
     events:
@@ -211,7 +214,7 @@ functions:
     events:
       - websocket:
           route: keepAlive
-# APIs
+  # APIs
   listUsers:
     handler: src/services/api/listUsers.handler
     events:
