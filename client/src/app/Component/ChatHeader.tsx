@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import UserImage from "../../assets/user.svg";
+import BackBtn from "../../assets/back.svg";
 import MenuIcon from "../../assets/menu.png";
 import Audio from "../../assets/audio-call.svg";
 import Video from "../../assets/video-call.svg";
@@ -10,7 +11,7 @@ import UserInfo from "@/app/Component/UserInfo";
 import ChatHistory from "./ChatHistory";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCallState } from "@/store/callSlice";
-
+import { useRouter } from "next/navigation";
 
 function ChatHeader() {
   const [historyProps, setHistoryProps] = useState({
@@ -23,6 +24,7 @@ function ChatHeader() {
   const callSlice = useSelector((state: any) => state.CallSlice);
   const ChatSlice = useSelector((state: any) => state.ChatSlice);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   function handleUserInfo() {
     setHistoryProps({ ...historyProps, userInfo: true });
@@ -67,6 +69,10 @@ function ChatHeader() {
   //   };
   // }, [answerCall]);
 
+  const handleBack = ()=>{
+    router.push('/chat')
+  }
+
   return (
     <div className="flex flex-row w-full">
       {" "}
@@ -77,7 +83,16 @@ function ChatHeader() {
         } h-[92vh] bg-amber-200`}
       >
         <header className="bg-sky-200 flex flex-row items-center w-full h-[8vh] min-h-[62px]">
-          <div className="flex-none px-6 cursor-pointer">
+          <div className="flex justify-between pl-2 pr-6 cursor-pointer">
+            <div className="flex" onClick={handleBack} >
+              <Image
+                priority
+                src={BackBtn}
+                height={50}
+                width={30}
+                alt="back-btn"
+              />
+            </div>
             <Image
               priority
               src={UserImage}
@@ -103,7 +118,7 @@ function ChatHeader() {
                   src={callSlice.incoming ? CloseIcon : Audio}
                   height={30}
                   width={20}
-                  alt="user-avatar"
+                  alt="voice-call"
                 />
               </div>
               <div
@@ -115,7 +130,7 @@ function ChatHeader() {
                   src={Video}
                   height={30}
                   width={20}
-                  alt="user-avatar"
+                  alt="video-call"
                 />
               </div>
               <div className=" text-xl cursor-pointer p-2 rounded">
