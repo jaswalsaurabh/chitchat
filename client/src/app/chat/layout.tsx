@@ -16,10 +16,10 @@ import { AppDispatch, ReduxState } from "@/store/store";
 import { UserEntry, fetchUserList, updateState } from "@/store/requestSlice";
 import { updateCallState } from "@/store/callSlice";
 import { usePeerHook } from "@/hooks/usePeerConnection";
-import DropdownComponent from "../Component/Modal";
+import DropdownComponent from "../Component/DropDown";
 import Tooltip from "../Component/ToolTip";
 import axios from "axios";
-import { CALL_KIND, CALL_MODE, SOCKET_ROUTE } from "../enum";
+import { CALL_KIND, CALL_MODE, MESSAGE, MSG_KIND, SOCKET_ROUTE } from "../enum";
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export default function RootLayout({
   children,
@@ -266,11 +266,6 @@ export default function RootLayout({
   }
 
   const handleAcknowledgement = (data: any) => {
-    // socketConnection.emit("acknowledge", {
-    //   chatId: chatState.currChatId,
-    //   messageId: data.data.id,
-    //   msgStatus: MESSAGE.DELIVERED,
-    // });
     console.log("this is data acknowledge", data);
 
     // dispatch(addChatMessage(data.data));
@@ -305,8 +300,8 @@ export default function RootLayout({
 
   if (!CallSlice.callScreen) {
     return (
-      <div className="flex flex-col">
-        <div className="flex h-[8vh] min-h-[63px] sticky top-0">
+      <div id="chat" className="flex flex-col">
+        <div className="flex h-[8vh] min-h-[63px] sticky z-10 bg-white top-0">
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center lg:w-[26%] h-full border-r">
               <h1 onClick={handleMessage} className="ml-4 text-2xl font-sans">
@@ -373,7 +368,7 @@ export default function RootLayout({
               pathLength.length == 3 && "hidden lg:flex"
             } lg:w-[26%] lg:min-w-[26%]`}
           >
-            <div className="flex items-center px-3 sticky h-[8vh] min-h-[62px] border-y bg-white top-0">
+            <div className="flex items-center px-3 sticky h-[8vh] min-h-[62px] border-y bg-white top-[63px]">
               <input
                 type="text"
                 placeholder="Search..."

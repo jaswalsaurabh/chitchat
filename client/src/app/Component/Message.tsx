@@ -4,6 +4,7 @@ import socketConnection from "../_lib/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { MESSAGE, MSG_KIND } from "../enum";
 import { ReduxState } from "@/store/store";
+import { Acknowledgement } from "@/types/chatTypes";
 
 function Message({ chatState }: { chatState: ChatState }) {
   const currUser = chatState.sender?.userId;
@@ -22,17 +23,28 @@ function Message({ chatState }: { chatState: ChatState }) {
       data.data.kind == MSG_KIND.IMAGE
     ) {
       socketConnection.emit("acknowledge", {
-        chatId: chatState.currChatId,
+        chatId: data.data.chatId,
         messageId: data.data.id,
-        msgStatus: MESSAGE.DELIVERED,
+        msgStatus: MESSAGE.SEEN,
         receiver: data.data.sender,
       });
     }
     dispatch(addChatMessage(data.data));
   };
+  // const reduxState = useSelector((state) => state);
+  const ChatState = useSelector((state: ReduxState) => state.ChatSlice);
 
-  const handleAcknowledgement = (data: any) => {
-    console.log("this is data acknowledge", data);
+  const handleAcknowledgement = (data: Acknowledgement) => {
+    console.log("ChatState", ChatState);
+
+    // const messageId = data.messageId;
+    // ChatState.chatHistory.data.forEach((item) => {
+    //   console.log("this is item out loop", item);
+    // if (item.id == data.messageId) {
+    //   console.log("this is item in loop", item);
+    // }
+    // });
+
     // dispatch(addChatMessage(data.data));
   };
 

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ChatState } from "@/store/chatSlice";
 import useAutosizeTextArea from "@/hooks/useAutosizeTextArea";
 import socketConnection from "../_lib/socket";
+import ModalComp from "./IncomingCall";
 
 function ChatInput({
   chatState,
@@ -64,7 +65,7 @@ function ChatInput({
     >
       <div className={`flex w-[80%] lg:w-1/2 items-center rounded-md`}>
         <div className="flex w-[91%] items-center bg-white rounded-md">
-          <div className="flex px-1 lg:px-4 lg:w-[9%] justify-center  cursor-pointer py-3 rounded-md">
+          <div className="flex px-1 w-[36px] justify-center  cursor-pointer py-3 rounded-md">
             <Image
               priority
               src={EmojiIcon}
@@ -84,7 +85,7 @@ function ChatInput({
               rows={1}
             />
           </div>
-          <div className="flex px-1 lg:px-4 lg:w-[9%] justify-center cursor-pointer py-3 rounded-md">
+          <div className="flex px-1 lg:px-3 w-[36px]justify-center cursor-pointer py-3 rounded-md">
             <Image
               priority
               src={AttachIcon}
@@ -94,15 +95,10 @@ function ChatInput({
             />
           </div>
         </div>
-        <div className="flex w-[15%] lg:w-[5%] ml-2 bg-cyan-500 py-2 justify-center cursor-pointer rounded-[50%]">
-          <Image
-            priority
-            src={MicIcon}
-            height={20}
-            width={20}
-            alt="mic"
-          />
+        <div className="flex w-[36px] ml-2 bg-cyan-500 py-2 justify-center cursor-pointer rounded-[50%]">
+          <Image priority src={MicIcon} height={20} width={20} alt="mic" />
         </div>
+        {/* <ModalComp/> */}
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ function ChatHeader() {
           historyProps.userInfo ? "flex w-[60%]" : "w-full"
         } h-[92vh] bg-amber-200`}
       >
-        <header className="bg-sky-200 flex flex-row items-center w-full h-[8vh] min-h-[62px]">
+        <header className="bg-sky-200 sticky top-[63px] flex flex-row items-center w-full h-[8vh] min-h-[62px]">
           <div className="flex justify-between pl-2 pr-6 cursor-pointer">
             <div className="flex" onClick={handleBack} >
               <Image
@@ -172,7 +172,7 @@ function ChatHeader() {
             : "hidden"
         }`}
       >
-        <div className="flex items-center bg-red-100 w-full h-[8vh] min-h-[62px]">
+        <div className="flex items-center bg-red-100 sticky top-[63px] w-full h-[8vh] min-h-[62px]">
           <div className="px-4 text-xl cursor-pointer" onClick={closeProfile}>
             <Image
               priority
