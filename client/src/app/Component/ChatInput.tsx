@@ -1,12 +1,11 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import EmojiIcon from "../../assets/emoji.png";
 import AttachIcon from "../../assets/attach.png";
 import MicIcon from "../../assets/mic.png";
 import Image from "next/image";
 import { ChatState } from "@/store/chatSlice";
 import socketConnection from "../_lib/socket";
-import ModalComp from "./IncomingCall";
 import TextareaAutosize from "react-textarea-autosize";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
@@ -20,8 +19,6 @@ function ChatInput({
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState<string>("");
-
-  // useAutosizeTextArea(textAreaRef.current, message);
 
   const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
     evt.preventDefault();
@@ -52,7 +49,9 @@ function ChatInput({
     } else if (e.key === "Enter") {
       e.preventDefault();
       setMessage("");
-      // handleQuery();
+      if (messageObj.body.length > 0) {
+        socketConnection.emit("message", { ...messageObj });
+      }
     }
   };
 
@@ -62,17 +61,11 @@ function ChatInput({
 
   const onEmojiClick = (emojiObject: EmojiClickData) => {
     setMessage((prevInput) => prevInput + emojiObject.emoji);
-    // setShowPicker(false);
-  };
-
-  const mouseOutCapture = () => {
-    console.log("outside ");
   };
 
   return (
     <div
       className={`flex items-center justify-center w-full fixed bottom-0 mb-10`}
-      onClickCapture={mouseOutCapture}
     >
       <div className={`flex w-[80%] lg:w-1/2 items-center rounded-md`}>
         <div className="flex w-[91%] items-center bg-white rounded-md">
@@ -117,7 +110,7 @@ function ChatInput({
         <div className="flex w-[36px] ml-2 bg-cyan-500 py-2 justify-center cursor-pointer rounded-[50%]">
           <Image priority src={MicIcon} height={20} width={20} alt="mic" />
         </div>
-        {/* <ModalComp/> */}
+        {/* <IncomingCall/> */}
       </div>
     </div>
   );

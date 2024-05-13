@@ -20,6 +20,7 @@ import DropdownComponent from "../Component/DropDown";
 import Tooltip from "../Component/ToolTip";
 import axios from "axios";
 import { CALL_KIND, CALL_MODE, MESSAGE, MSG_KIND, SOCKET_ROUTE } from "../enum";
+import Modal from "../Component/IncomingCall";
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
 export default function RootLayout({
   children,
@@ -427,6 +428,7 @@ export default function RootLayout({
             {children}
           </div>
         </div>
+        <Modal/>
       </div>
     );
   }
