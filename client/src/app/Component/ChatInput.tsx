@@ -5,9 +5,10 @@ import AttachIcon from "../../assets/attach.png";
 import MicIcon from "../../assets/mic.png";
 import Image from "next/image";
 import { ChatState } from "@/store/chatSlice";
-import useAutosizeTextArea from "@/hooks/useAutosizeTextArea";
 import socketConnection from "../_lib/socket";
 import ModalComp from "./IncomingCall";
+import TextareaAutosize from "react-textarea-autosize";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 function ChatInput({
   chatState,
@@ -20,9 +21,10 @@ function ChatInput({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState<string>("");
 
-  useAutosizeTextArea(textAreaRef.current, message);
+  // useAutosizeTextArea(textAreaRef.current, message);
 
   const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    evt.preventDefault();
     const val = evt.target?.value;
     setMessage(val);
   };
@@ -37,35 +39,47 @@ function ChatInput({
     route: "message",
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    let msg = message.trim();
-    if (event.key === "Enter" && msg) {
-      socketConnection.emit("message", { ...messageObj });
-    }
-    if (event.shiftKey && event.key === "Enter") {
-      adjustInputHeight();
+  const [rows, setRows] = useState(1);
+
+  const [emoji, setEmoji] = useState(false);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const newLineCount = (message.match(/\n/g) || []).length + 1;
+    if (e.key === "Enter" && e.shiftKey) {
+      e.preventDefault();
+      setMessage(message + "\n");
+      setRows(newLineCount > 4 ? 4 : newLineCount);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      setMessage("");
+      // handleQuery();
     }
   };
 
-  const adjustInputHeight = () => {
-    const input = textAreaRef.current;
-    if (input) {
-      input.style.height = "0px";
-      input.style.height = input.scrollHeight + "px";
-    }
+  const handleEmoji = () => {
+    setEmoji(!emoji);
   };
 
-  useEffect(() => {
-    adjustInputHeight();
-  }, []);
+  const onEmojiClick = (emojiObject: EmojiClickData) => {
+    setMessage((prevInput) => prevInput + emojiObject.emoji);
+    // setShowPicker(false);
+  };
+
+  const mouseOutCapture = () => {
+    console.log("outside ");
+  };
 
   return (
     <div
       className={`flex items-center justify-center w-full fixed bottom-0 mb-10`}
+      onClickCapture={mouseOutCapture}
     >
       <div className={`flex w-[80%] lg:w-1/2 items-center rounded-md`}>
         <div className="flex w-[91%] items-center bg-white rounded-md">
-          <div className="flex px-1 w-[36px] justify-center  cursor-pointer py-3 rounded-md">
+          <div
+            onClick={handleEmoji}
+            className="flex px-1 w-[36px] justify-center  cursor-pointer py-3 rounded-md"
+          >
             <Image
               priority
               src={EmojiIcon}
@@ -74,15 +88,20 @@ function ChatInput({
               alt="emoji"
             />
           </div>
+          <div className="absolute bottom-12">
+            <EmojiPicker open={emoji} onEmojiClick={onEmojiClick} />
+          </div>
           <div className="flex items-center w-full py-2">
-            <textarea
+            <TextareaAutosize
+              ref={textAreaRef}
               className="w-full outline-none border-none resize-none"
+              placeholder="Send a message..."
+              cacheMeasurements
+              value={message}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
-              placeholder="Type a message.."
-              ref={textAreaRef}
-              value={message}
-              rows={1}
+              rows={rows}
+              maxRows={4}
             />
           </div>
           <div className="flex px-1 lg:px-3 w-[36px]justify-center cursor-pointer py-3 rounded-md">

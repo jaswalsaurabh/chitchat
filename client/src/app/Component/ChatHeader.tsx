@@ -8,7 +8,7 @@ import Audio from "../../assets/audio-call.svg";
 import Video from "../../assets/video-call.svg";
 import CloseIcon from "../../assets/close.svg";
 import UserInfo from "@/app/Component/UserInfo";
-import ChatHistory from "./ChatHistory";
+import ChatHistory from "./Chat";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCallState } from "@/store/callSlice";
 import { useRouter } from "next/navigation";

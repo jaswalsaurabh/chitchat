@@ -31,7 +31,7 @@ export default function RootLayout({
     sdp: string;
   };
   const pathname = usePathname();
-  console.log("this is path", pathname);
+  // console.log("this is path", pathname);
 
   const pathLength = pathname.split("/");
   // peerHook
