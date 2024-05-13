@@ -6,7 +6,7 @@ import socketConnection from "../_lib/socket";
 import { MessageEntry, addChatMessage } from "@/store/chatSlice";
 import { MESSAGE, MSG_KIND } from "../enum";
 import { useDispatch } from "react-redux";
-import Modal from "../Component/IncomingCall";
+
 export default function Page() {
   const dispatch = useDispatch();
 

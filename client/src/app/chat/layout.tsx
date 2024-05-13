@@ -19,9 +19,10 @@ import { usePeerHook } from "@/hooks/usePeerConnection";
 import DropdownComponent from "../Component/DropDown";
 import Tooltip from "../Component/ToolTip";
 import axios from "axios";
-import { CALL_KIND, CALL_MODE, MESSAGE, MSG_KIND, SOCKET_ROUTE } from "../enum";
+import { CALL_KIND, CALL_MODE, SOCKET_ROUTE } from "../enum";
 import Modal from "../Component/IncomingCall";
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,12 +38,10 @@ export default function RootLayout({
   const pathLength = pathname.split("/");
   // peerHook
   const { peer, getOffer, getAnswer, closePeerConnection } = usePeerHook();
-  //
   const AuthSlice = useSelector((state: ReduxState) => state.AuthSlice);
   const CallSlice = useSelector((state: ReduxState) => state.CallSlice);
   const ChatSlice = useSelector((state: ReduxState) => state.ChatSlice);
   const RequestSlice = useSelector((state: ReduxState) => state.RequestSlice);
-  // AuthSlice
   // local
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -265,13 +264,6 @@ export default function RootLayout({
       );
     }
   }
-
-  const handleAcknowledgement = (data: any) => {
-    console.log("this is data acknowledge", data);
-
-    // dispatch(addChatMessage(data.data));
-  };
-
   useEffect(() => {
     // socketConnection.on("user:joined", handleUserJoined);
     socketConnection.on("callended", endCallEvent);
@@ -298,6 +290,8 @@ export default function RootLayout({
   ]);
 
   const chatList = ChatSlice.chatList.data;
+
+  console.log("this is callSlice <><><>><", CallSlice);
 
   if (!CallSlice.callScreen) {
     return (
@@ -428,26 +422,36 @@ export default function RootLayout({
             {children}
           </div>
         </div>
-        <Modal/>
+        <Modal />
       </div>
     );
   }
   if (CallSlice.callScreen) {
     return (
       <div className=" bg-[#202325] flex flex-col absolute w-full text-white h-screen">
-        {/* <div className="flex min-h-[10px] justify-between"></div> */}
-
         <div className="flex mt-5 relative w-auto h-[60%] mx-5">
           <div className="flex flex-col flex-1 border relative mx-5 rounded-2xl border-green-400">
             <div className="h-[10%] absolute right-0 flex items-center justify-end mx-2">
               Extra
             </div>
             <div className="h-[100%] relative flex justify-center items-center">
-              <video
-                className="relative h-full aspect-video"
-                ref={localVideoRef}
-                autoPlay
-              />
+              {CallSlice.isCalling ? (
+                <div>
+                  <Image
+                    priority
+                    src={UserImage}
+                    height={100}
+                    alt="userAvatar"
+                  />
+                  <p className="text-white text-center">Calling...</p>
+                </div>
+              ) : (
+                <video
+                  className="relative h-full aspect-video"
+                  ref={remoteVideoRef}
+                  autoPlay
+                />
+              )}
             </div>
             <div className="flex h-[10%] absolute bottom-0 w-full items-center justify-between ">
               <h1 className="relative right-0 mx-2">Michael Smyth</h1>
@@ -461,7 +465,7 @@ export default function RootLayout({
             <div className="flex items-center h-full justify-center">
               <video
                 className="relative h-full aspect-video"
-                ref={remoteVideoRef}
+                ref={localVideoRef}
                 autoPlay
               />
             </div>

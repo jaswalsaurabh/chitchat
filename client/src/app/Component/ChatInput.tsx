@@ -15,8 +15,6 @@ function ChatInput({
   parentWidth: number | null;
   chatState: ChatState;
 }) {
-  // console.log("width input", widthStyle);
-
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState<string>("");
 
@@ -110,7 +108,6 @@ function ChatInput({
         <div className="flex w-[36px] ml-2 bg-cyan-500 py-2 justify-center cursor-pointer rounded-[50%]">
           <Image priority src={MicIcon} height={20} width={20} alt="mic" />
         </div>
-        {/* <IncomingCall/> */}
       </div>
     </div>
   );
